@@ -1,0 +1,10 @@
+<% @syms.each do |sym| %>
+  <% sym.charts.each do |chart| %>
+    <div class="row title">
+      <h2><%= symbol(sym) %></h2>
+    </div>
+    <div class="row charts">
+      <%= high_stock(sym.id.to_s, chart) %>
+    </div>
+  <% end %>
+<% end %>

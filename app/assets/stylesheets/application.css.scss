@@ -1,0 +1,98 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or any plugin's vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any styles
+ * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
+ * file per style scope.
+ *
+ *= require font-awesome
+ *= require select2
+ *= require_tree .
+ *= require_self
+ */
+
+@import "bootstrap";
+@import "bootstrap-sprockets";
+
+a:hover, a:active {
+  text-decoration: none;
+  color: #000000;
+}
+
+.container {
+  width: 100%;
+}
+
+.sym {
+  margin-bottom: 40px;
+}
+
+.row {
+  &.charts {
+    margin: 20px 0;
+  }
+
+  &.title {
+    text-align: center;
+
+    .btn-group {
+      float: left;
+    }
+
+    .fa {
+      font-size: .7em;
+      color: #CCCCCC;
+      float: right;
+
+      &:hover, &:active, &:visited {
+        color: #333333;
+      }
+    }
+  }
+}
+
+.left {
+  float: left;
+}
+
+.right {
+  float: right;
+}
+
+.select2-container {
+  width: 100%;
+
+  .select2-choices {
+    width: 100%;
+    height: 34px;
+    padding: 0;
+    font-size: 14px;
+    line-height: 1.428571429;
+    color: #555555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -webkit-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+    -o-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+    transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+
+    li.select2-search-choice {
+      background: none !important;
+      box-shadow: none !important;
+      padding-top: 7px !important;
+      border: none !important;
+
+      a.select2-search-choice-close {
+        top: 6px !important;
+      }
+    }
+  }
+}

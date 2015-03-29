@@ -1,0 +1,28 @@
+<div class="row title">
+  <h4>
+    <%= sym.full_name %> (<%= sym.market %>)<br>
+    <%= sym_info(sym) %>
+  </h4>
+</div>
+
+<div class="row charts">
+  <% if sym.historical_chart %>
+    <%= high_stock(sym.id.to_s, sym.historical_chart) %>
+  <% else %>
+    <div class="row title">
+      <h4>No Historical Data. Select a different API</h4>
+    </div>
+  <% end %>
+</div>
+
+<% n = 0 %>
+<% sym.week_charts.in_groups_of(3) do |triple| %>
+  <div class="row charts">
+    <% triple.each do |chart| %>
+      <div class="col-md-4">
+        <% n += 1 %>
+        <%= high_chart("#{sym.id}#{n}", chart) %>
+      </div>
+    <% end %>
+  </div>
+<% end %>

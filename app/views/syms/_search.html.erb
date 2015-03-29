@@ -1,0 +1,53 @@
+<%= search_form_for q, url: syms_path do |f| %>
+  <div class="row">
+    <div class='col-md-6'>
+      <%= f.label :id_in, 'Symbol', class: 'control-label' %>
+      <%= f.hidden_field :id_in, data: { source: autocomplete_syms_path, multiple: true },
+        class: 'full-field select2-autocomplete' %>
+    </div>
+    <div class='col-md-6'>
+      <%= f.label :market_id, 'Market', class: 'control-label' %>
+      <%= f.select :market_id, options_from_collection_for_select(Market.all, :id, :name), { include_blank: true },
+        { class: 'form-control' } %>
+    </div>
+  </div>
+  <div class='row'>
+    <div class='col-md-3'>
+      <div class='form-group'>
+        <%= f.label :current_price_gteq, 'Min Price', class: 'control-label' %>
+        <div class="input-group">
+          <span class="input-group-addon" id="current_price_gteq">$</span>
+          <%= f.search_field :current_price_gteq, class: 'form-control', 'aria-described-by' => :current_price_gteq %>
+        </div>
+      </div>
+    </div>
+    <div class='col-md-3'>
+      <div class='form-group'>
+        <%= f.label :current_price_lteq, 'Max Price', class: 'control-label' %>
+        <div class="input-group">
+          <span class="input-group-addon" id="current_price_lteq">$</span>
+          <%= f.search_field :current_price_lteq, class: 'form-control', 'aria-described-by' => :current_price_lteq %>
+        </div>
+      </div>
+    </div>
+    <div class='col-md-3'>
+      <div class='form-group'>
+        <%= f.label :volatility_gteq, 'Min Volatility', class: 'control-label' %>
+        <div class="input-group">
+          <%= f.search_field :volatility_gteq, class: 'form-control', 'aria-described-by' => :volatility_gteq %>
+          <span class="input-group-addon" id="volatility_gteq">%</span>
+        </div>
+      </div>
+    </div>
+    <div class='col-md-3'>
+      <div class='form-group'>
+        <%= f.label :volatility_lteq, 'Max Volatility', class: 'control-label' %>
+        <div class="input-group">
+          <%= f.search_field :volatility_lteq, class: 'form-control', 'aria-described-by' => :volatility_lteq %>
+          <span class="input-group-addon" id="volatility_lteq">%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <%= f.submit 'Search', class: 'btn btn-primary' %>
+<% end %>

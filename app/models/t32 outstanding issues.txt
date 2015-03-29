@@ -1,0 +1,71 @@
+link hover underline in status section of dashboard should match green button color
+lose right sidebar entirely, increase width of main container
+move next/prev table buttons to main div
+fix spacing between prev table arrow and text (as in table 2) in next/prev table buttons
+make left sidebar fixed position
+faculty honors placeholders cut off
+grant type showing up as camelcase
+!! if jQuery data tables can just scroll the body of the table, then let’s do that
+Move the link to download all tables from the side bar to the dashboard in the Tables section. It might make sense to re-word the link or use an icon?
+On applicant edit page, make sure we know what the different GRE and MCAT fields are even if they have a value in them.
+add grey background and rounded corners to GRE/MCAT scores http://localhost:3013/grant_applications/4/tables/table8a with a tooltip on hover
+When people are removed from a table, visually indicate that they are removed (grey them out?)
+fix footer width
+
+
+
+
+Fixed table headers on overflow:hidden tables
+validate numericality of entries
+
+├── applicants
+│   ├── review_previous_changes.html.erb
+├── departments
+│   ├── review_previous_changes.html.erb
+├── faculty_members
+│   ├── review_previous_changes.html.erb
+├── grants
+│   ├── review_previous_changes.html.erb
+├── groups
+│   ├── _list_table.html.erb
+│   └── show.html.erb
+├── layouts
+│   ├── _logout_modal.html.erb
+│   ├── _messages.html.erb
+│   └── data_warehouse.html.erb
+├── mentorships
+│   ├── _form.html.erb
+│   ├── edit.html.erb
+│   ├── new.html.erb
+│   ├── review_previous_changes.html.erb
+├── publications
+│   ├── _form.html.erb
+│   ├── edit.html.erb
+│   ├── new.html.erb
+│   ├── review_previous_changes.html.erb
+├── roles
+│   ├── _form.html.erb
+│   ├── edit.html.erb
+│   ├── index.html.erb
+│   ├── new.html.erb
+│   └── show.html.erb
+├── shared
+│   ├── review_previous_changes
+│   │   ├── _fields_for_attribute.html.erb
+│   │   └── _form.html.erb
+│   └── subforms
+│       ├── _degrees.html.erb
+│       ├── _employments.html.erb
+│       ├── _honors.html.erb
+│       ├── _memberships.html.erb
+│       ├── _other_grants.html.erb
+│       ├── _publications.html.erb
+│       └── _science_contributions.html.erb
+├── trainees
+│   ├── _form.html.erb
+│   ├── edit.html.erb
+│   ├── new.html.erb
+│   ├── review_previous_changes.html.erb
+└── users
+    ├── index.html.erb
+    └── new.html.erb
