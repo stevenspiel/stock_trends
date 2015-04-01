@@ -24,7 +24,6 @@ class Yf
 
   def log_intraday_history(sym, type = 'sma')
     range = number_of_days_to_back_fill(sym)
-    binding.pry
     return if range == 0
     data = intraday(sym, type, range)
     Tick.import(data)
@@ -87,7 +86,7 @@ class Yf
 
   def number_of_days_to_back_fill(sym)
     today = Date.today
-    last_tick_date = (sym.ticks.maximum(:time) || time - 15.days).to_date
+    last_tick_date = (sym.ticks.maximum(:time) || today - 15.days).to_date
     last_tick_date.to_date.business_days_until(today)
   end
 
