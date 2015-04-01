@@ -8,9 +8,11 @@ Rails.application.routes.draw do
   resources :syms do
     member do
       get :rerun_historical
+      post :toggle_favorite
     end
     collection do
       get :autocomplete
+      get :favorites
     end
   end
 

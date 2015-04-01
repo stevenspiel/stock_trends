@@ -95,16 +95,3 @@ class Mod
     # 2011-03-01T00:00:00-00
   end
 end
-#
-# 'http://dev.markitondemand.com/Api/v2/InteractiveChart/json?parameters={"Normalized":false,"NumberOfDays":365,"DataPeriod":"Day","Elements":[{"Symbol":"AAPL","Type":"price","Params":["c"]}]}'
-# 'http://dev.markitondemand.com/Api/v2/InteractiveChart/json?parameters=%7B%22Normalized%22%3Afalse%2C%22NumberOfDays%22%3A365%2C%22DataPeriod%22%3A%22Day%22%2C%22Elements%22%3A%5B%7B%22Symbol%22%3A%22AAPL%22%2C%22Type%22%3A%22price%22%2C%22Params%22%3A%5B%22c%22%5D%7D%5D%7D'
-# {"Normalized" =>'false', "NumberOfDays" =>'365',"DataPeriod" =>"Day", "Elements" =>[{"Symbol" => "AAPL", "Type" => "price", "Params" => ["c"] }]}.to_query
-#
-#
-# me   = 'http://dev.markitondemand.com/Api/v2/InteractiveChart/json?parameters=%7B%22Normalized%22:%22false%22%2C_%22NumberOfDays%22:%22365%22%2C_%22DataPeriod%22:  %22Day%22%2C_%22Elements%22:  %5B%7B%22Symbol%22:  %22AAPL%22%2C_%22Type%22:  %22price%22%2C_%22Params%22:     %22c%22   %7D%5D%7D'
-# them = 'http://dev.markitondemand.com/Api/v2/InteractiveChart/json?parameters=%7B%22Normalized%22%3A false%2C%22    NumberOfDays%22%3A 365   %2C %22DataPeriod%22%3A%22Day%22%2C %22Elements%22%3A%5B%7B%22Symbol%22%3A%22AAPL%22%2C %22Type%22%3A%22price%22%2C %22Params%22%3A%5B%22c%22%5D%7D%5D%7D'
-#
-# them = 'http://dev.markitondemand.com/Api/v2/InteractiveChart/json?parameters=%7B%22Normalized%22%3Afalse%2C%22NumberOfDays%22%3A365%2C%22DataPeriod%22%3A%22Day%22%2C%22Elements%22%3A%5B%7B%22Symbol%22%3A%22AAPL%22%2C%22Type%22%3A%22price%22%2C%22Params%22%3A%5B%22c%22%5D%7D%5D%7D'
-# new =  'http://dev.markitondemand.com/Api/v2/InteractiveChart/json?parameters=%7B%22Normalized%22%3Afalse%2C%22NumberOfDays%22%3A365%2C%22DataPeriod%22%3A%22Day%22%2C%22Elements%22%3A%5B%7B%22Symbol%22%3A%22AAPL%22%2C%22Type%22%3A%22price%22%2C%22Params%22%3A%5B%22c%22%5D%7D%5D%7D'
-#
-#

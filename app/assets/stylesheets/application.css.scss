@@ -19,12 +19,44 @@
 @import "bootstrap";
 @import "bootstrap-sprockets";
 
-a:hover, a:active {
+body {
+  font-family: 'Ropa Sans', sans-serif;
+}
+
+a, a:hover, a:active, a:visited, a:focus {
   text-decoration: none;
-  color: #000000;
+  color: #21ce99;
+}
+
+nav {
+  position: fixed;
+  height: 50px;
+  left: 0;
+  right: 0;
+  top: 0;
+  background: rgba(255, 255, 255, 0.83);
+  z-index: 1000;
+
+  h2#title {
+    text-align: left;
+    margin: 0 20px 0 20px;
+    line-height: 50px;
+    font-weight: bold;
+
+    .navigation {
+      float: right;
+
+      a {
+        float: right;
+        padding-left: .4em;
+      }
+    }
+  }
+
 }
 
 .container {
+  margin-top: 50px;
   width: 100%;
 }
 
@@ -37,7 +69,11 @@ a:hover, a:active {
     margin: 20px 0;
   }
 
-  &.title {
+  &.title, h2 {
+    font-weight: bold;
+  }
+
+  &.title, &.subititle {
     text-align: center;
 
     .btn-group {
@@ -50,7 +86,13 @@ a:hover, a:active {
       float: right;
 
       &:hover, &:active, &:visited {
-        color: #333333;
+        color: #21ce99;
+      }
+
+      &.warning {
+        &:hover, &:active, &:visited {
+          color: #fc522a;
+        }
       }
     }
   }

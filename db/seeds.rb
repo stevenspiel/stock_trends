@@ -10,7 +10,7 @@ MARKET_SYMBOLS.each do |symbols_hash|
   end
 end
 
-['Yahoo', 'Market On Demand', 'Quandl', 'Nasdaq', 'Trade King'].each do |api|
+['Yahoo', 'Market On Demand', 'Quandl', 'Trade King'].each do |api|
   Api.create!(name: api)
 end
 

@@ -21,6 +21,10 @@ class Sym < ActiveRecord::Base
   scope :unsuccessful_price, -> { where('current_price IS NULL OR current_price = ?', 0) }
   scope :successful_price, -> { where('current_price IS NOT NULL AND current_price != ?', 0) }
 
+  scope :favorited, -> { where(favorite: true) }
+  scope :enabled, -> { where('disabled IS NULL OR disabled = ?', false) }
+  scope :greater_than, -> (sym) { where('id > ?', sym.id) }
+
   def self.week_day(n)
     WEEK_DAYS[n]
   end
@@ -52,7 +56,8 @@ class Sym < ActiveRecord::Base
     data.map{ |datum| [(datum[0].strftime('%s').to_i * 1000), datum[1].to_f] }
   end
 
-  def intraday_data(day_number)
+  def intraday_data(day_number, n_weeks = nil)
+    # ONLY GET 5 WEEKS
     grouped_by_day(day_number).map do |week_number, data_points|
       {
         name: day(week_number, day_number),
@@ -114,7 +119,8 @@ class Sym < ActiveRecord::Base
   end
 
   def day(week_number, day_number)
-    (Date.today.beginning_of_year + week_number.weeks + day_number.days).strftime('%b %d')
+    # Why do I have to subtract 4 days?!
+    ((Date.today.beginning_of_year + week_number.weeks + day_number.days) - 4.days).strftime('%b %d')
   end
 
   def grouped_by_day(day_number)
@@ -123,7 +129,8 @@ class Sym < ActiveRecord::Base
   end
 
   def stacked_consecutive_days(n_days)
-    ticks.where('time > ?', (n_days.business_days.before(Date.today))).pluck(:time, :amount)
+    # It only returns 4 days when on a weekend
+    ticks.where('time > ?', ((n_days - 0).business_days.before(Date.today))).pluck(:time, :amount)
       .group_by{ |datum| datum[0].to_date }
   end
 

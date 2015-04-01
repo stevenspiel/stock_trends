@@ -1,13 +1,14 @@
+<% params[:q] ||= {} %>
 <%= search_form_for q, url: syms_path do |f| %>
   <div class="row">
     <div class='col-md-6'>
       <%= f.label :id_in, 'Symbol', class: 'control-label' %>
-      <%= f.hidden_field :id_in, data: { source: autocomplete_syms_path, multiple: true },
+      <%= f.hidden_field :id_in, value: nil, data: { source: autocomplete_syms_path, multiple: true },
         class: 'full-field select2-autocomplete' %>
     </div>
     <div class='col-md-6'>
       <%= f.label :market_id, 'Market', class: 'control-label' %>
-      <%= f.select :market_id, options_from_collection_for_select(Market.all, :id, :name), { include_blank: true },
+      <%= f.select :market_id, options_from_collection_for_select(Market.all, :id, :name, params[:q][:market_id]), { include_blank: true },
         { class: 'form-control' } %>
     </div>
   </div>
@@ -17,7 +18,8 @@
         <%= f.label :current_price_gteq, 'Min Price', class: 'control-label' %>
         <div class="input-group">
           <span class="input-group-addon" id="current_price_gteq">$</span>
-          <%= f.search_field :current_price_gteq, class: 'form-control', 'aria-described-by' => :current_price_gteq %>
+          <%= f.search_field :current_price_gteq, value: params[:q][:current_price_gteq], class: 'form-control',
+            'aria-described-by' => :current_price_gteq %>
         </div>
       </div>
     </div>
@@ -26,7 +28,8 @@
         <%= f.label :current_price_lteq, 'Max Price', class: 'control-label' %>
         <div class="input-group">
           <span class="input-group-addon" id="current_price_lteq">$</span>
-          <%= f.search_field :current_price_lteq, class: 'form-control', 'aria-described-by' => :current_price_lteq %>
+          <%= f.search_field :current_price_lteq, value: params[:q][:current_price_gteq], class: 'form-control',
+            'aria-described-by' => :current_price_lteq %>
         </div>
       </div>
     </div>
@@ -34,7 +37,8 @@
       <div class='form-group'>
         <%= f.label :volatility_gteq, 'Min Volatility', class: 'control-label' %>
         <div class="input-group">
-          <%= f.search_field :volatility_gteq, class: 'form-control', 'aria-described-by' => :volatility_gteq %>
+          <%= f.search_field :volatility_gteq, value: params[:q][:volatility_gteq], class: 'form-control',
+            'aria-described-by' => :volatility_gteq %>
           <span class="input-group-addon" id="volatility_gteq">%</span>
         </div>
       </div>
@@ -43,7 +47,8 @@
       <div class='form-group'>
         <%= f.label :volatility_lteq, 'Max Volatility', class: 'control-label' %>
         <div class="input-group">
-          <%= f.search_field :volatility_lteq, class: 'form-control', 'aria-described-by' => :volatility_lteq %>
+          <%= f.search_field :volatility_lteq, value: params[:q][:volatility_lteq], class: 'form-control',
+            'aria-described-by' => :volatility_lteq %>
           <span class="input-group-addon" id="volatility_lteq">%</span>
         </div>
       </div>

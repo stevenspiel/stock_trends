@@ -1,11 +1,11 @@
 <div class="row title">
   <h2>
-    <%= render 'rerun_historical', sym: @sym %>
+    <%= render 'sym_options', sym: @sym %>
     <div class="col-md-4">
       <%= sym_title(@sym) %>
     </div>
     <div class="col-md-4">
-      <%= link_to(fa_icon('times-circle'), sym_path(@sym, q: @q, redirect: :index), method: :delete) %>
+      <%= link_to fa_icon('times-circle', class: 'warning'), sym_path(@sym, q: @q, redirect: :index), method: :delete %>
     </div>
   </h2>
 </div>

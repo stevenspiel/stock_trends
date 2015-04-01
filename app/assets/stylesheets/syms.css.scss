@@ -1,11 +1,31 @@
 .sym_search {
-  padding: 4em;
+  padding: 3em 4em;
   background: #eee;
   border-radius: 8px;
-  margin: 3em 20%;
+  margin: 2em 20%;
 
   .row {
     margin-bottom: 2em;
+  }
+}
+
+.row.title {
+  .sym-options {
+    .option {
+      float: left;
+      margin-right: .3em;
+
+      a {
+        display: inline-block;
+        color: #CCCCCC;
+        &:hover, &:visited, &:focus, &:active { i { color: #CCCCCC; }}
+
+        &.active {
+          color: #21ce99;
+          &:hover, &:visited, &:focus, &:active { i { color: #21ce99; }}
+        }
+      }
+    }
   }
 }
 

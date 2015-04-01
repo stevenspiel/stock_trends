@@ -1,0 +1,5 @@
+<% if @sym.favorite %>
+  $('#favorite-<%= @sym.id %>').addClass('active');
+<% else %>
+  $('#favorite-<%= @sym.id %>').removeClass('active');
+<% end %>

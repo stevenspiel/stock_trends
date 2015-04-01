@@ -58,6 +58,8 @@ ActiveRecord::Schema.define(version: 20150825232514) do
     t.decimal  "volatility"
     t.integer  "historical_api_id"
     t.integer  "intraday_api_id"
+    t.boolean  "favorite"
+    t.boolean  "disabled"
   end
 
   add_index "syms", ["current_price"], name: "index_syms_on_current_price", using: :btree

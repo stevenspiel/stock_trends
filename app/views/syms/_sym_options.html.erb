@@ -1,5 +1,5 @@
-<div class="col-md-4">
-  <div class="btn-group">
+<div class="col-md-4 sym-options">
+  <div class="btn-group option">
     <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
       <%= sym.historical_api || 'Select API' %> <span class="caret"></span>
     </button>
@@ -10,4 +10,10 @@
       <% end %>
     </ul>
   </div>
+  <div class="option">
+    <%= link_to fa_icon('star-o'), toggle_favorite_sym_path(sym), method: :post, remote: true,
+      id: "favorite-#{sym.id}", class: "icon #{ 'active' if sym.favorite }" %>
+  </div>
 </div>
+
+

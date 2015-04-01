@@ -5,30 +5,40 @@ class Yf
     @api = Api.yahoo
   end
 
-  def intraday(sym, type = 'sma', days = 15, open = true)
+  def id
+    @api ||= Api.yahoo
+    @api.id
+  end
+
+  def intraday(sym, type = 'sma', days = 15)
     return [] if days == 0
+    sym = Sym.find_by(name: sym) unless sym.is_a? Sym
     csv(sym, type, days).each_line.map do |line|
       next if line[0] != '1'
       tick = line.split(',')
       time = transform_time(tick[0])
-      next if open && day_not_finished?(time)
       amount = transform_sma(tick[1])
       Tick.new(sym_id: sym.id, time: time, amount: amount)
     end.compact
   end
 
-  def log_intraday_history(sym, type = 'sma', open = true)
+  def log_intraday_history(sym, type = 'sma')
     range = number_of_days_to_back_fill(sym)
+    binding.pry
     return if range == 0
-    data = intraday(sym, type, range, open)
+    data = intraday(sym, type, range)
     Tick.import(data)
     if data.any?
       sym.update_columns(
         last_updated_tick_time: data.last.time,
         volatility: sym.calculate_volatility,
-        intraday_api: @api
+        intraday_api_id: id,
+        current_price: data.last.amount
+        # LOG HISTORICAL EOD
       )
+      print 'Success'
     else
+      # It may have just been empty!!
       sym.update_column(:intraday_log_error, true)
     end
   end
@@ -57,13 +67,10 @@ class Yf
     end
   end
 
-  def api
-    @api ||= Api.yahoo
-  end
-
   def prices(symbols)
+    # prices = open("http://finance.yahoo.com/d/quotes.csv?s=#{symbols.join('+')}&f=snl1").read
     prices = open("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in(#{ symbols.map{ |symbol| "%22#{symbol}%22" }.join('%2C')})&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=").read
-    JSON.parse(prices)['query']['results']['quote'].map { |quote| { ask: quote['Ask'], symbol: quote['Symbol'] }}
+    JSON.parse(prices)['query']['results']['quote'].map { |quote| { ask: quote['Bid'], symbol: quote['Symbol'] }}
   end
 
   def csv(sym, type, days)
@@ -80,9 +87,8 @@ class Yf
 
   def number_of_days_to_back_fill(sym)
     today = Date.today
-    last_tick_date = (sym.ticks.maximum(:time) || today - 15.days).to_date
-    return 0 if last_tick_date == today # or if it's 12:01
-    today.mjd - last_tick_date.mjd
+    last_tick_date = (sym.ticks.maximum(:time) || time - 15.days).to_date
+    last_tick_date.to_date.business_days_until(today)
   end
 
   def day_not_finished?(time)

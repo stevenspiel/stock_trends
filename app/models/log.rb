@@ -9,7 +9,7 @@ class Log
     ActiveRecord::Base.logger = nil
   end
 
-  def prices(api: @yf, scope: :all, where: nil)
+  def prices(api: @yf, scope: :all, where: [])
     @markets.each do |market|
       market.syms.send(scope).where(where).in_groups_of(BATCH_SIZE) do |group|
         begin
@@ -40,7 +40,7 @@ class Log
         rescue => error
           binding.pry
         end
-        puts percent_complete(scope)
+        puts percent_complete(scope: scope)
       end
     end
     nil
@@ -48,15 +48,15 @@ class Log
 
   def intraday(api: @yf, scope: :all, where: nil)
     @markets.each do |market|
-      open = market.open?
+      # First tick is opening price and last one is closing price
       market.syms.send(scope).where(where).find_each do |sym|
         begin
-          puts "Logging Intraday Ticks for #{sym.market} - #{sym}"
-          api.log_intraday_history(sym, 'sma', open)
+          print "Logging Intraday Ticks for #{sym.market} - #{sym.padded}"
+          api.log_intraday_history(sym, 'sma')
         rescue => error
           binding.pry
         end
-        puts percent_complete
+        puts percent_complete(scope: :greater_than, sym: sym)
       end
     end
     nil
@@ -78,8 +78,8 @@ class Log
 
   private
 
-  def percent_complete(scope = :all)
-    remaining = Sym.send(scope).count
+  def percent_complete(scope: :all, sym: nil)
+    remaining = sym ? Sym.send(scope, sym).count : Sym.send(scope).count
     all = Sym.count
     completed = all - remaining
     percent_complete = (completed.to_f /  all) * 100

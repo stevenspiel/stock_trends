@@ -13,6 +13,8 @@ class CreateSyms < ActiveRecord::Migration
       t.boolean :showing_patterns
       t.boolean :historical_data_logged
       t.boolean :intraday_log_error
+      t.boolean :favorite, index: true
+      t.boolean :disabled, index: true
       t.timestamps null: false
     end
   end
