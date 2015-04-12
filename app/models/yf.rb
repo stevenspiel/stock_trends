@@ -10,22 +10,25 @@ class Yf
     @api.id
   end
 
-  def intraday(sym, type = 'sma', days = 15)
-    return [] if days == 0
+  def intraday(sym, type = 'sma', days = 15, last_tick = nil)
     sym = Sym.find_by(name: sym) unless sym.is_a? Sym
-    csv(sym, type, days).each_line.map do |line|
+    ticks = csv(sym, type, days).each_line.map do |line|
       next if line[0] != '1'
       tick = line.split(',')
       time = transform_time(tick[0])
+      next if last_tick && time < last_tick
       amount = transform_sma(tick[1])
       Tick.new(sym_id: sym.id, time: time, amount: amount)
     end.compact
+    last_tick = Date.today - 15.days unless last_tick
+    ticks + opens_and_closes(sym, last_tick)
   end
 
   def log_intraday_history(sym, type = 'sma')
-    range = number_of_days_to_back_fill(sym)
-    return if range == 0
-    data = intraday(sym, type, range)
+    last_tick = sym.ticks.maximum(:time).try(:to_date)
+    days = Date.today - (last_tick || 'Jan 1 1900'.to_date)
+    return if days == 0
+    data = intraday(sym, type, days, last_tick)
     Tick.import(data)
     if data.any?
       sym.update_columns(
@@ -33,7 +36,6 @@ class Yf
         volatility: sym.calculate_volatility,
         intraday_api_id: id,
         current_price: data.last.amount
-        # LOG HISTORICAL EOD
       )
       print 'Success'
     else
@@ -42,9 +44,29 @@ class Yf
     end
   end
 
+  def opens_and_closes(sym, last_tick)
+    begin
+      quotes = CSV.parse open("http://ichart.finance.yahoo.com/table.csv?s=#{sym.name}&#{(last_tick - 1.month).strftime('a=%m&b=%d&c=%Y')}&#{(Date.today - 1.month).strftime('d=%m&e=%d&f=%Y')}&ignore=.csv").read
+    rescue
+      print "Could not retrieve open/close prices for #{sym.name}"
+      return []
+    end
+
+    historicals = quotes.map do |line|
+      next if line.first == 'Date'
+      HistoricalDatum.new(sym_id: sym.id, date: line[0].to_date, opening_price: line[1], closing_price: line[4])
+    end.compact
+    HistoricalDatum.import(historicals)
+
+    quotes.map do |line|
+      next if line.first == 'Date'
+      [Tick.new(sym_id: sym.id, time: line[0].to_datetime + 13.hours, amount: line[1]), Tick.new(sym_id: sym.id, time: line[0].to_datetime + 20.hours, amount: line[4])]
+    end.flatten.compact
+  end
+
   def historical_data(sym)
     begin
-      CSV.parse open("http://ichart.finance.yahoo.com/table.csv?s=#{sym}&d=3&e=23&f=2010&g=d&a=3&b=12&c=1996&ignore=.csv").read
+      CSV.parse open("http://ichart.finance.yahoo.com/table.csv?s=#{sym}&ignore=.csv").read
     rescue => error
       error
     end
@@ -87,6 +109,7 @@ class Yf
   def number_of_days_to_back_fill(sym)
     today = Date.today
     last_tick_date = (sym.ticks.maximum(:time) || today - 15.days).to_date
+    binding.pry
     last_tick_date.to_date.business_days_until(today)
   end
 
