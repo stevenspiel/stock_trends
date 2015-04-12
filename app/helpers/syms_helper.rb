@@ -79,7 +79,7 @@ module SymsHelper
 
       f.xAxis(type: 'datetime')
       f.legend(align: 'right', verticalAlign: 'top', y: 75, x: -50, layout: 'vertical')
-      f.colors(n_days.times.map{|n| "rgba(0, 0, 0, #{ ( 1.to_f / (n + 1)**1.75 ).round(2)})" })
+      f.colors(n_days.times.map{|n| "rgba(0, 0, 0, #{ ( 1.to_f / (n + 1)**1.75 ).round(2)})" }.reverse)
       f.chart(height: 300)
       f.plotOptions({ series: { lineWidth: 3, marker: { fillColor: 'none', lineColor: nil }}})
     end
