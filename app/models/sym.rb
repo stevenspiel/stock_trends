@@ -38,7 +38,7 @@ class Sym < ActiveRecord::Base
   end
 
   def padded(string = ' ')
-    name.ljust(5, string)
+    name.ljust(7, string)
   end
 
   def calculate_volatility(days = 10)
