@@ -1,5 +1,6 @@
 class Yf
   require 'open-uri'
+  require 'pry'
 
   def new
     @api = Api.yahoo
@@ -18,27 +19,30 @@ class Yf
       time = transform_time(tick[0])
       next if last_tick && time < last_tick
       amount = transform_sma(tick[1])
+      binding.pry if time > Date.today
       Tick.new(sym_id: sym.id, time: time, amount: amount)
     end.compact
     last_tick = Date.today - 15.days unless last_tick
-    ticks + opens_and_closes(sym, last_tick)
+    data = ticks.presence || opens_and_closes(sym, last_tick)
+    data + end_points(data, sym.id)
   end
 
   def log_intraday_history(sym, type = 'sma')
     last_tick = sym.ticks.maximum(:time).try(:to_date)
-    days = Date.today - (last_tick || 'Jan 1 1900'.to_date)
+    days = (Date.today - (last_tick || 'Jan 1 1900'.to_date)).to_i
     return if days == 0
     data = intraday(sym, type, days, last_tick)
-    Tick.import(data)
     if data.any?
+      Tick.import(data)
       sym.update_columns(
         last_updated_tick_time: data.last.time,
         volatility: sym.calculate_volatility,
         intraday_api_id: id,
         current_price: data.last.amount
       )
-      print 'Success'
+      print "Success. Imported #{data.size.to_s.rjust(4, ' ')} ticks."
     else
+      print 'No ticks to import'
       # It may have just been empty!!
       sym.update_column(:intraday_log_error, true)
     end
@@ -48,7 +52,7 @@ class Yf
     begin
       quotes = CSV.parse open("http://ichart.finance.yahoo.com/table.csv?s=#{sym.name}&#{(last_tick - 1.month).strftime('a=%m&b=%d&c=%Y')}&#{(Date.today - 1.month).strftime('d=%m&e=%d&f=%Y')}&ignore=.csv").read
     rescue
-      print "Could not retrieve open/close prices for #{sym.name}"
+      print "Could not retrieve open/close prices for #{sym.padded} "
       return []
     end
 
@@ -60,8 +64,32 @@ class Yf
 
     quotes.map do |line|
       next if line.first == 'Date'
-      [Tick.new(sym_id: sym.id, time: line[0].to_datetime + 13.hours, amount: line[1]), Tick.new(sym_id: sym.id, time: line[0].to_datetime + 20.hours, amount: line[4])]
+      ticks = [Tick.new(sym_id: sym.id, time: line[0].to_datetime + 13.5.hours, amount: line[1]), Tick.new(sym_id: sym.id, time: line[0].to_datetime + 20.hours, amount: line[4])]
+      ticks.each do |t|
+        binding.pry if t.time > Date.today
+      end
+      ticks
     end.flatten.compact
+  end
+
+  def end_points(data, sym_id)
+    end_points = []
+    data.group_by{ |datum| datum.time.to_date }.each do |day, ticks|
+      first_tick = ticks.min_by(&:time)
+      last_tick = ticks.max_by(&:time)
+      if first_tick.time.hour > 13.7
+        end_points << Tick.new(sym_id: sym_id, time: first_tick.time.to_date + 13.5.hours, amount: first_tick.amount)
+      elsif first_tick.time.hour > 14.2 && day.wday == 5
+        end_points << Tick.new(sym_id: sym_id, time: first_tick.time.to_date + 14.hours, amount: first_tick.amount) # some fridays start at 10am
+      end
+      if last_tick.time.hour < 19.8
+        end_points << Tick.new(sym_id: sym_id, time: last_tick.time.to_date + 20.hours, amount: last_tick.amount)
+      end
+    end
+    end_points.each do |t|
+      binding.pry if t.time > Date.today
+    end
+    end_points
   end
 
   def historical_data(sym)

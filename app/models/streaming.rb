@@ -5,7 +5,7 @@ class Streaming
   def self.run(*symbols)
     EM.run do
       options = {
-       inactivity_timeout: 25_000
+       inactivity_timeout: 25_000_000
       }
 
       conn = EventMachine::HttpRequest.new("https://stream.tradeking.com/v1/market/quotes.json?symbols=#{symbols.join(',')}", options)

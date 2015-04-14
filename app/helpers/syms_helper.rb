@@ -42,7 +42,7 @@ module SymsHelper
   def week_day_charts(sym)
     n_weeks = 5
     (1..5).to_a.map do |day_of_week|
-      data = sym.intraday_data(day_of_week)
+      data = sym.intraday_data(day_of_week, n_weeks)
       LazyHighCharts::HighChart.new('spline') do |f|
         f.title(text: Sym.week_day(day_of_week))
 

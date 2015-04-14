@@ -57,8 +57,7 @@ class Sym < ActiveRecord::Base
   end
 
   def intraday_data(day_number, n_weeks = nil)
-    # ONLY GET 5 WEEKS
-    grouped_by_day(day_number).map do |week_number, data_points|
+    grouped_by_day(day_number, n_weeks).map do |week_number, data_points|
       {
         name: day(week_number, day_number),
         data: week_shifted_data(week_number, data_points)
@@ -123,8 +122,9 @@ class Sym < ActiveRecord::Base
     ((Date.today.beginning_of_year + week_number.weeks + day_number.days) - 4.days).strftime('%b %d')
   end
 
-  def grouped_by_day(day_number)
-    ticks.where('EXTRACT(DOW FROM time) = ?', day_number).pluck(:time, :amount)
+  def grouped_by_day(day_number, n_weeks)
+    ticks.where('EXTRACT(DOW FROM time) = ? AND time > ?', day_number, n_weeks_ago(day_number, n_weeks))
+      .pluck(:time, :amount)
       .group_by{ |datum| datum[0].strftime('%U').to_i }
   end
 
@@ -136,6 +136,20 @@ class Sym < ActiveRecord::Base
 
   def current_week_number
     Date.today.strftime('%U').to_i
+  end
+
+  def n_weeks_ago(day_number, n_weeks)
+    today = Time.current.to_date
+    if today.wday == day_number
+      delta = today - n_weeks.weeks
+    elsif today.wday > day_number
+      beginning_of_this_week = today - today.wday
+      delta = beginning_of_this_week + day_number.days
+    else
+      beginning_of_last_week = today - (today.wday - 1).week
+      delta = beginning_of_last_week + day_number.days
+    end
+    delta - (n_weeks - 1).weeks
   end
 
 end
