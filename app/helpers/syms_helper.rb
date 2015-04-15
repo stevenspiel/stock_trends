@@ -50,9 +50,12 @@ module SymsHelper
           f.series(name: data[:name], data: data[:data])
         end
 
-        f.xAxis(type: 'datetime')
-        f.legend(align: 'right', verticalAlign: 'top', y: 75, x: -50, layout: 'vertical')
-        f.colors(n_weeks.times.map{|n| "rgba(0, 0, 0, #{ ( 1.to_f / (n + 1)**1.75 ).round(2)})" }.reverse[(data.size * -1)..-1])
+        f.xAxis(type: 'datetime', dateTimeLabelFormats: { hour: '%I %p', minute: '%I:%M %p' }, title: { text: nil })
+        f.yAxis(labels: { formatter: "function(){ return '$' + this.value.toFixed(2) }".js_code}, title: { text: nil })
+        f.legend(align: 'right', verticalAlign: 'top', y: 75, x: 0, layout: 'vertical')
+        f.tooltip(formatter: "function(){ return this.series.name + ' ' + (moment(this.x + 1000*3600*4)).format(' hh:mm') + '<br><b>$' + this.y + '</b>' }".js_code)
+        # f.colors(n_days.times.map{|n| "rgba(0, 0, 0, #{ ( 1.to_f / (n + 1)**1.75 ).round(2)})" }.reverse)
+        f.colors(n_weeks.times.map{|n| "rgba(69, 213, 161, #{ ( 1.to_f / (n + 1)**1.1 ).round(2)})" }.reverse[(data.size * -1)..-1])
         f.chart(height: 300)
         f.plotOptions({
           series: {
@@ -73,13 +76,17 @@ module SymsHelper
     LazyHighCharts::HighChart.new('spline') do |f|
       f.title(text: "Past #{n_days} Work Days")
 
-      sym.past_work_days(n_days).each do |data|
+      past_work_days = sym.past_work_days(n_days)
+      past_work_days.each do |data|
         f.series(name: data[:name], data: data[:data])
       end
 
-      f.xAxis(type: 'datetime')
-      f.legend(align: 'right', verticalAlign: 'top', y: 75, x: -50, layout: 'vertical')
-      f.colors(n_days.times.map{|n| "rgba(0, 0, 0, #{ ( 1.to_f / (n + 1)**1.75 ).round(2)})" }.reverse)
+      f.xAxis(type: 'datetime', dateTimeLabelFormats: { hour: '%I %p', minute: '%I:%M %p' }, title: { text: nil })
+      f.yAxis(labels: { formatter: "function(){ return '$' + this.value.toFixed(2) }".js_code}, title: { text: nil })
+      f.legend(align: 'right', verticalAlign: 'top', y: 75, x: 0, layout: 'vertical')
+      f.tooltip(formatter: "function(){ return this.series.name + ' ' + (moment(this.x + 1000*3600*4)).format(' hh:mm') + '<br><b>$' + this.y + '</b>' }".js_code)
+      # f.colors(past_work_days.size.times.map{|n| "rgba(0, 0, 0, #{ ( 1.to_f / (n + 1)**1.75 ).round(2)})" }.reverse)
+      f.colors(past_work_days.size.times.map{|n| "rgba(69, 213, 161, #{ ( 1.to_f / (n + 1)**1.1 ).round(2)})" }.reverse)
       f.chart(height: 300)
       f.plotOptions({ series: { lineWidth: 3, marker: { fillColor: 'none', lineColor: nil }}})
     end

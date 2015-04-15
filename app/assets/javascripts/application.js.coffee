@@ -15,6 +15,7 @@
 #= require bootstrap-sprockets
 #= require select2
 #= require highcharts/highstock
+#= require moment
 #= require_tree .
 
 $ ->

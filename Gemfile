@@ -26,6 +26,7 @@ gem 'bootstrap-sass'
 gem 'will_paginate', '~> 3.0.6'
 gem 'ransack'
 gem 'font-awesome-rails', '~> 4.3.0'
+gem 'momentjs-rails'
 
 
 group :development, :test do

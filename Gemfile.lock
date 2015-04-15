@@ -106,6 +106,8 @@ GEM
     mime-types (2.4.3)
     mini_portile (0.6.2)
     minitest (5.5.1)
+    momentjs-rails (2.9.0)
+      railties (>= 3.1)
     multi_json (1.11.0)
     nokogiri (1.6.6.2)
       mini_portile (~> 0.6.0)
@@ -227,6 +229,7 @@ DEPENDENCIES
   jbuilder (~> 2.0)
   jquery-rails
   lazy_high_charts
+  momentjs-rails
   oauth
   pg
   pry-nav
