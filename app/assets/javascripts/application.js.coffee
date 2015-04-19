@@ -25,6 +25,15 @@ $ ->
     select.select2
       multiple: multiple
       dropdownCssClass: 'bigdrop'
+      initSelection: (element, callback) ->
+        ids = $(element).val()
+        return unless ids.length
+        return $.ajax select.data('initialize'),
+          dataType: 'json'
+          method: 'GET'
+          data: { ids: ids }
+        .done (data) ->
+          callback(data)
       ajax:
         url: select.data('source')
         dataType: 'json'
