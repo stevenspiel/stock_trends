@@ -55,7 +55,7 @@ module SymsHelper
         f.legend(align: 'right', verticalAlign: 'top', y: 75, x: 0, layout: 'vertical')
         f.tooltip(formatter: "function(){ return this.series.name + ' ' + (moment(this.x + 1000*3600*4)).format(' hh:mm') + '<br><b>$' + this.y + '</b>' }".js_code)
         # f.colors(n_days.times.map{|n| "rgba(0, 0, 0, #{ ( 1.to_f / (n + 1)**1.75 ).round(2)})" }.reverse)
-        f.colors(n_weeks.times.map{|n| "rgba(69, 213, 161, #{ ( 1.to_f / (n + 1)**1.1 ).round(2)})" }.reverse[(data.size * -1)..-1])
+        f.colors(data.size.times.map{|n| "rgba(69, 213, 161, #{ ( 1.to_f / (n + 1)**1.1 ).round(2)})" }.reverse[(data.size * -1)..-1])
         f.chart(height: 300)
         f.plotOptions({
           series: {
