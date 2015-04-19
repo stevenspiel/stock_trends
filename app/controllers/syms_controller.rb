@@ -14,6 +14,16 @@ class SymsController < ApplicationController
     end
   end
 
+  def initialize_autocomplete
+    ids = params[:ids].split(',')
+    @syms = Sym.where(id: ids)
+
+    respond_to do |format|
+      format.html
+      format.json { render json: @syms }
+    end
+  end
+
   def favorites
     @syms = Sym.favorited.paginate(page: params[:page], per_page: 10)
     build_charts(@syms)
@@ -27,8 +37,9 @@ class SymsController < ApplicationController
 
   def index
     session[:search_results] = request.url
-    @q = Sym.ransack(params[:q])
-    @syms = @q.result.successful_intraday.enabled.paginate(page: params[:page], per_page: 10)
+    transform_params!
+    @q = Sym.ransack(params)
+    @syms = @q.result.successful_intraday.enabled.ordered.paginate(page: params[:page], per_page: 10)
     build_charts(@syms)
   end
 
@@ -51,11 +62,18 @@ class SymsController < ApplicationController
     redirect_to sym_path(sym)
   end
 
+  private
+
   def build_charts(syms)
     syms.each do |sym|
       sym.week_charts = week_day_charts(sym) << past_n_days_chart(sym)
       sym.historical_chart = historical_chart(sym)
     end
+  end
+
+  def transform_params!
+    _ins = params.fetch(:q, {}).keys.select{|key| key.to_s[-3..-1] == '_in'}
+    _ins.each { |key| params[:q][key] = params[:q][key].to_s.split(',') }
   end
 
 end

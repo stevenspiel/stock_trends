@@ -12,6 +12,7 @@ Rails.application.routes.draw do
     end
     collection do
       get :autocomplete
+      get :initialize_autocomplete
       get :favorites
     end
   end
