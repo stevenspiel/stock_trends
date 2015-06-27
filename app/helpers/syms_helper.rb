@@ -14,28 +14,48 @@ module SymsHelper
       f.zoomType(:x)
       f.title(text: historical_title(sym))
       f.xAxis(type: 'datetime')
+      f.tooltip(pointFormat: 'Price: ${point.y:.2f}')
       f.legend(enabled: false)
+      f.rangeSelector({
+        inputEnabled: false,
+        buttonTheme: {
+          fill: 'none',
+          stroke: 'none',
+          'stroke-width' => 0,
+          r: 8,
+          style: {
+            color: '#21ce99',
+            fontWeight: 'bold'
+          },
+          states: {
+            hover: {
+              fill: 'none',
+              style: {
+                color: '#CCC',
+                cursor: 'pointer',
+              }
+            },
+            select: {
+              fill: 'none',
+              style: {
+                color: '#CCC',
+              }
+            }
+          },
+          labelStyle: {
+            display: 'none'
+          },
+          selected: 1
+        }
+      })
       f.series({
         type: 'area',
         name: 'Price',
         data: data,
         color: '#21ce99',
-        # fillColor: { linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 }, stops: [[0, '#21ce99'], [1, '#ffffff']] }
-        # fillColor: { linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 }, stops: [[0, '#3480d5'], [1, '#ffffff']] }
+        fillColor: { linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 }, stops: [[0, '#21ce99'], [1, '#d2f5ea']] }
       })
-      f.navigator({
-        series: {
-          color: '#000000',
-          lineWidth: 1,
-          marker: {
-            enabled: true,
-            fillColor: 'none',
-            lineColor: nil,
-            symbol: 'circle',
-            radius: 1
-          },
-        },
-      })
+      f.navigator(enabled: false)
     end
   end
 
@@ -64,7 +84,8 @@ module SymsHelper
               fillColor: 'none',
               lineColor: nil,
               symbol: 'circle',
-              radius: 1
+              radius: 1,
+              enabled: false
             }
           }
         })
@@ -85,10 +106,20 @@ module SymsHelper
       f.yAxis(labels: { formatter: "function(){ return '$' + this.value.toFixed(2) }".js_code}, title: { text: nil })
       f.legend(align: 'right', verticalAlign: 'top', y: 75, x: 0, layout: 'vertical')
       f.tooltip(formatter: "function(){ return this.series.name + ' ' + (moment(this.x + 1000*3600*4)).format(' hh:mm') + '<br><b>$' + this.y + '</b>' }".js_code)
-      # f.colors(past_work_days.size.times.map{|n| "rgba(0, 0, 0, #{ ( 1.to_f / (n + 1)**1.75 ).round(2)})" }.reverse)
       f.colors(past_work_days.size.times.map{|n| "rgba(69, 213, 161, #{ ( 1.to_f / (n + 1)**1.1 ).round(2)})" }.reverse)
       f.chart(height: 300)
-      f.plotOptions({ series: { lineWidth: 3, marker: { fillColor: 'none', lineColor: nil }}})
+      f.plotOptions({
+        series: {
+          lineWidth: 3,
+          marker: {
+            fillColor: 'none',
+            lineColor: nil,
+            symbol: 'circle',
+            radius: 1,
+            enabled: false
+          }
+        }
+      })
     end
   end
 
