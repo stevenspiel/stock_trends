@@ -131,7 +131,7 @@ class Sym < ActiveRecord::Base
 
   def stacked_consecutive_days(n_days)
     # It only returns 4 days when on a weekend
-    ticks.where('time > ?', ((n_days - 0).business_days.before(Date.today))).pluck(:time, :amount)
+    ticks.where('time > ?', ((n_days - 1).business_days.before(Date.today))).pluck(:time, :amount)
       .group_by{ |datum| datum[0].to_date }
   end
 
@@ -142,7 +142,7 @@ class Sym < ActiveRecord::Base
   def n_weeks_ago(day_number, n_weeks)
     today = Time.current.to_date
     if today.wday == day_number
-      delta = today - n_weeks.weeks
+      delta = today - 1.week
     elsif today.wday > day_number
       beginning_of_this_week = today - today.wday
       delta = beginning_of_this_week + day_number.days
