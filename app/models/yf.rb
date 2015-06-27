@@ -1,6 +1,5 @@
 class Yf
   require 'open-uri'
-  require 'pry'
 
   def new
     @api = Api.yahoo
@@ -19,7 +18,6 @@ class Yf
       time = transform_time(tick[0])
       next if last_tick && time < last_tick
       amount = transform_sma(tick[1])
-      binding.pry if time > Date.today
       Tick.new(sym_id: sym.id, time: time, amount: amount)
     end.compact
     last_tick = Date.today - 15.days unless last_tick
@@ -65,10 +63,6 @@ class Yf
     quotes.map do |line|
       next if line.first == 'Date'
       ticks = [Tick.new(sym_id: sym.id, time: line[0].to_datetime + 13.5.hours, amount: line[1]), Tick.new(sym_id: sym.id, time: line[0].to_datetime + 20.hours, amount: line[4])]
-      ticks.each do |t|
-        binding.pry if t.time > Date.today
-      end
-      ticks
     end.flatten.compact
   end
 
@@ -85,9 +79,6 @@ class Yf
       if last_tick.time.hour < 19.8
         end_points << Tick.new(sym_id: sym_id, time: last_tick.time.to_date + 20.hours, amount: last_tick.amount)
       end
-    end
-    end_points.each do |t|
-      binding.pry if t.time > Date.today
     end
     end_points
   end
@@ -137,7 +128,6 @@ class Yf
   def number_of_days_to_back_fill(sym)
     today = Date.today
     last_tick_date = (sym.ticks.maximum(:time) || today - 15.days).to_date
-    binding.pry
     last_tick_date.to_date.business_days_until(today)
   end
 
