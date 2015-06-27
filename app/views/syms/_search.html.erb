@@ -3,7 +3,8 @@
   <div class="row">
     <div class='col-md-6'>
       <%= f.label :id_in, 'Symbol', class: 'control-label' %>
-      <%= f.hidden_field :id_in, value: nil, data: { source: autocomplete_syms_path, multiple: true },
+      <%= f.hidden_field :id_in, value: params.fetch(:q, {})[:id_in],
+        data: { source: autocomplete_syms_path, initialize: initialize_autocomplete_syms_path, multiple: true },
         class: 'full-field select2-autocomplete' %>
     </div>
     <div class='col-md-6'>
