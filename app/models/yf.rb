@@ -16,17 +16,19 @@ class Yf
       next if line[0] != '1'
       tick = line.split(',')
       time = transform_time(tick[0])
-      next if last_tick && time < last_tick
+      next if last_tick && time.to_date < last_tick
       amount = transform_sma(tick[1])
       Tick.new(sym_id: sym.id, time: time, amount: amount)
     end.compact
-    last_tick = Date.today - 15.days unless last_tick
-    data = ticks.presence || opens_and_closes(sym, last_tick)
-    data + end_points(data, sym.id)
+
+    last_tick = (Date.today - 15.days) unless last_tick
+    ticks += end_points(ticks, sym.id)
+    gaps = filled_in_gaps(last_tick.to_date, sym, ticks)
+    (ticks + gaps).sort_by(&:time)
   end
 
   def log_intraday_history(sym, type = 'sma')
-    last_tick = sym.ticks.maximum(:time).try(:to_date)
+    last_tick = sym.ticks.maximum(:time).try(:to_datetime)
     days = (Date.today - (last_tick || 'Jan 1 1900'.to_date)).to_i
     return if days == 0
     data = intraday(sym, type, days, last_tick)
@@ -39,48 +41,56 @@ class Yf
         current_price: data.last.amount
       )
       print "Success. Imported #{data.size.to_s.rjust(4, ' ')} ticks."
-    else
-      print 'No ticks to import'
-      # It may have just been empty!!
-      sym.update_column(:intraday_log_error, true)
     end
+  end
+
+  def filled_in_gaps(last_tick, sym, ticks = [])
+    @opens_and_closes = nil
+    ((last_tick.to_date + 1.day)..Date.today).map do |day|
+      if Tick.where("date_trunc('day', time) = ?", day).limit(1)
+        @opens_and_closes ||= opens_and_closes(sym, last_tick)
+        next if ticks.find{ |tick| tick.time.to_date == day }
+        @opens_and_closes.select{ |tick| tick.time.to_date == day} || most_recent_days_close(sym, day, ticks)
+      end
+    end.flatten.compact
   end
 
   def opens_and_closes(sym, last_tick)
     begin
-      quotes = CSV.parse open("http://ichart.finance.yahoo.com/table.csv?s=#{sym.name}&#{(last_tick - 1.month).strftime('a=%m&b=%d&c=%Y')}&#{(Date.today - 1.month).strftime('d=%m&e=%d&f=%Y')}&ignore=.csv").read
+      quotes = CSV.parse open("http://ichart.finance.yahoo.com/table.csv?s=#{sym.name}&#{(last_tick - 1.month).strftime('a=%m&b=%d&c=%Y')}&ignore=.csv").read
     rescue
       print "Could not retrieve open/close prices for #{sym.padded} "
       return []
     end
 
     historicals = quotes.map do |line|
-      next if line.first == 'Date'
+      next if line.first == 'Date' || line[0].to_date < last_tick
       HistoricalDatum.new(sym_id: sym.id, date: line[0].to_date, opening_price: line[1], closing_price: line[4])
     end.compact
     HistoricalDatum.import(historicals)
 
     quotes.map do |line|
-      next if line.first == 'Date'
-      ticks = [Tick.new(sym_id: sym.id, time: line[0].to_datetime + 13.5.hours, amount: line[1]), Tick.new(sym_id: sym.id, time: line[0].to_datetime + 20.hours, amount: line[4])]
+      next if line.first == 'Date' || line[0].to_date < last_tick
+      [Tick.new(sym_id: sym.id, time: line[0].to_datetime + 13.5.hours, amount: line[1]), Tick.new(sym_id: sym.id, time: line[0].to_datetime + 20.hours, amount: line[4])]
     end.flatten.compact
   end
 
+  def most_recent_days_close(sym, day, ticks)
+    in_memory_last_tick = ticks.select{|tick| tick.time.to_date <= day}.max_by(&:time)
+    remote_last_tick = sym.ticks.max_by(&:time)
+    last_tick = [in_memory_last_tick, remote_last_tick].compact.max_by(&:time)
+    amount = last_tick.amount
+    [Tick.new(sym_id: sym.id, time: day + 13.5.hours, amount: amount), Tick.new(sym_id: sym.id, time: day + 20.hours, amount: amount)]
+  end
+
   def end_points(data, sym_id)
-    end_points = []
-    data.group_by{ |datum| datum.time.to_date }.each do |day, ticks|
+    return [] if data.blank?
+    data.group_by{ |datum| datum.time.to_date }.map do |_, ticks|
       first_tick = ticks.min_by(&:time)
       last_tick = ticks.max_by(&:time)
-      if first_tick.time.hour > 13.7
-        end_points << Tick.new(sym_id: sym_id, time: first_tick.time.to_date + 13.5.hours, amount: first_tick.amount)
-      elsif first_tick.time.hour > 14.2 && day.wday == 5
-        end_points << Tick.new(sym_id: sym_id, time: first_tick.time.to_date + 14.hours, amount: first_tick.amount) # some fridays start at 10am
-      end
-      if last_tick.time.hour < 19.8
-        end_points << Tick.new(sym_id: sym_id, time: last_tick.time.to_date + 20.hours, amount: last_tick.amount)
-      end
-    end
-    end_points
+      [Tick.new(sym_id: sym_id, time: first_tick.time.to_date + 13.5.hours, amount: first_tick.amount),
+       Tick.new(sym_id: sym_id, time: last_tick.time.to_date + 20.hours, amount: last_tick.amount)]
+    end.flatten
   end
 
   def historical_data(sym)
