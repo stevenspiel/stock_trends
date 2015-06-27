@@ -29,7 +29,6 @@ class SymsController < ApplicationController
     build_charts(@syms)
   end
 
-
   def toggle_favorite
     @sym = Sym.find(params[:id])
     @sym.update_column(:favorite, !@sym.favorite)
@@ -38,7 +37,7 @@ class SymsController < ApplicationController
   def index
     session[:search_results] = request.url
     transform_params!
-    @q = Sym.ransack(params)
+    @q = Sym.ransack(params[:q])
     @syms = @q.result.successful_intraday.enabled.ordered.paginate(page: params[:page], per_page: 10)
     build_charts(@syms)
   end
