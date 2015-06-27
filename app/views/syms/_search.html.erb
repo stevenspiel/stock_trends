@@ -8,8 +8,8 @@
     </div>
     <div class='col-md-6'>
       <%= f.label :market_id, 'Market', class: 'control-label' %>
-      <%= f.select :market_id, options_from_collection_for_select(Market.all, :id, :name, params[:q][:market_id]), { include_blank: true },
-        { class: 'form-control' } %>
+      <%= f.select :market_id, options_from_collection_for_select(Market.all, :id, :name, params[:q][:market_id]),
+        { include_blank: true }, { class: 'form-control' } %>
     </div>
   </div>
   <div class='row'>
