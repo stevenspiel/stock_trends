@@ -28,10 +28,14 @@ gem 'ransack'
 gem 'font-awesome-rails', '~> 4.3.0'
 gem 'momentjs-rails'
 
+gem 'execjs'
+gem 'therubyracer'
 
 group :development, :test do
   gem 'pry-nav'
   gem 'web-console', '~> 2.0'
   gem 'spring'
+  gem 'rspec-rails'
+  gem 'shoulda-matchers'
 end
 
