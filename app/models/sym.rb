@@ -24,6 +24,7 @@ class Sym < ActiveRecord::Base
   scope :favorited, -> { where(favorite: true) }
   scope :enabled, -> { where('disabled IS NULL OR disabled = ?', false) }
   scope :greater_than, -> (sym) { where('id > ?', sym.id) }
+  scope :ordered, -> { order(:name) }
 
   def self.week_day(n)
     WEEK_DAYS[n]
