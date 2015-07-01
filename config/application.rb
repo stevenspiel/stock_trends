@@ -16,6 +16,7 @@ Bundler.require(*Rails.groups)
 
 module StockTrends
   class Application < Rails::Application
+    config.autoload_paths += %W(#{config.root}/app/apis)
     config.autoload_paths += %W(#{config.root}/app/services)
 
     # Settings in config/environments/* take precedence over those specified here.
