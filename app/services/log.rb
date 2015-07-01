@@ -6,7 +6,25 @@ class Log
     @tk = Tk.new
     @q = Q.new
     @yf = Yf.new
-    ActiveRecord::Base.logger = nil
+    ActiveRecord::Base.logger = nil # suppress sql output
+  end
+
+  def intraday(api: @yf, scope: :all, where: nil)
+    # cron runs nightly
+    @markets.each do |market|
+      # First tick is opening price and last one is closing price
+      market.syms.send(scope).where(where).find_each do |sym|
+        begin
+          print "Logging Intraday Ticks for #{sym.market} - #{sym.padded}"
+          api.log_intraday_history(sym)
+        rescue => error
+          binding.pry
+        end
+        puts percent_complete(scope: :greater_than, sym: sym)
+      end
+      Curator.run!(market)
+    end
+    nil
   end
 
   def prices(api: @yf, scope: :all, where: [])
@@ -41,22 +59,6 @@ class Log
           binding.pry
         end
         puts percent_complete(scope: scope)
-      end
-    end
-    nil
-  end
-
-  def intraday(api: @yf, scope: :all, where: nil)
-    @markets.each do |market|
-      # First tick is opening price and last one is closing price
-      market.syms.send(scope).where(where).find_each do |sym|
-        begin
-          print "Logging Intraday Ticks for #{sym.market} - #{sym.padded}"
-          api.log_intraday_history(sym, 'sma')
-        rescue => error
-          binding.pry
-        end
-        puts percent_complete(scope: :greater_than, sym: sym)
       end
     end
     nil
