@@ -1,3 +1,11 @@
+GIT
+  remote: git://github.com/zdennis/activerecord-import.git
+  revision: 556a0c8d1a66992be9c673347131627bb6bac829
+  branch: set_ids_in_bulk_import
+  specs:
+    activerecord-import (0.7.0)
+      activerecord (>= 3.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -30,8 +38,6 @@ GEM
       activemodel (= 4.2.0)
       activesupport (= 4.2.0)
       arel (~> 6.0)
-    activerecord-import (0.7.0)
-      activerecord (>= 3.0)
     activesupport (4.2.0)
       i18n (~> 0.7)
       json (~> 1.7, >= 1.7.7)
@@ -244,7 +250,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activerecord-import
+  activerecord-import!
   bootstrap-sass
   business_time
   chartkick
