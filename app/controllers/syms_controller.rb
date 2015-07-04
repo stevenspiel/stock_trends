@@ -1,5 +1,6 @@
 class SymsController < ApplicationController
   include SymsHelper
+  include ChartsHelper
 
   def autocomplete
     results = Market.by_importance.map do |market|
