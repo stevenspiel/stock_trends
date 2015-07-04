@@ -57,7 +57,6 @@ ActiveRecord::Schema.define(version: 20150825232514) do
     t.boolean  "intraday_log_error"
     t.decimal  "volatility"
     t.integer  "historical_api_id"
-    t.integer  "intraday_api_id"
     t.boolean  "favorite"
     t.boolean  "disabled"
   end
