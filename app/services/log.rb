@@ -17,8 +17,8 @@ class Log
         begin
           print "Logging Intraday Ticks for #{sym.market} - #{sym.padded}"
           api.log_intraday_history(sym)
-        rescue => error
-          binding.pry
+        rescue => e
+          binding.pry if Rails.env.development?
         end
         puts percent_complete(scope: :greater_than, sym: sym)
       end
@@ -40,8 +40,8 @@ class Log
             sym.update_attributes!(current_price: ask)
             puts "#{sym.padded} - $#{sym.current_price}"
           end
-        rescue => error
-          binding.pry
+        rescue => e
+          binding.pry if Rails.env.development?
         end
       end
     end
@@ -55,8 +55,8 @@ class Log
           print "Logging Historical Data for #{sym.market} - #{sym.padded('.')}..."
           result = api.log_historical(sym)
           return if api.not_successful?(result) && api.handle_error(result, sym)
-        rescue => error
-          binding.pry
+        rescue => e
+          binding.pry if Rails.env.development?
         end
         puts percent_complete(scope: scope)
       end
@@ -71,8 +71,8 @@ class Log
         next unless volatility
         sym.update_column(:volatility, volatility)
         puts "#{sym.padded} - #{sym.volatility}%"
-      rescue => error
-        binding.pry
+      rescue => e
+        binding.pry if Rails.env.development?
       end
     end
     nil
