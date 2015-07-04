@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150825232514) do
+ActiveRecord::Schema.define(version: 20150628020012) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,6 +21,16 @@ ActiveRecord::Schema.define(version: 20150825232514) do
   end
 
   add_index "apis", ["name"], name: "index_apis_on_name", using: :btree
+
+  create_table "days", force: :cascade do |t|
+    t.integer  "sym_id",     null: false
+    t.date     "date",       null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "days", ["date"], name: "index_days_on_date", using: :btree
+  add_index "days", ["sym_id"], name: "index_days_on_sym_id", using: :btree
 
   create_table "historical_data", force: :cascade do |t|
     t.integer  "sym_id",        null: false
@@ -36,46 +46,54 @@ ActiveRecord::Schema.define(version: 20150825232514) do
   add_index "historical_data", ["sym_id"], name: "index_historical_data_on_sym_id", using: :btree
 
   create_table "markets", force: :cascade do |t|
-    t.string   "name",        null: false
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-    t.decimal  "hour_opens",  null: false
-    t.decimal  "hour_closes", null: false
+    t.string   "name",             null: false
+    t.decimal  "hour_opens",       null: false
+    t.decimal  "hour_closes",      null: false
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+    t.date     "last_day_curated"
   end
 
   add_index "markets", ["name"], name: "index_markets_on_name", using: :btree
 
   create_table "syms", force: :cascade do |t|
-    t.integer  "market_id",              null: false
-    t.string   "name",                   null: false
+    t.integer  "market_id",                                 null: false
+    t.integer  "historical_api_id"
+    t.integer  "intraday_api_id"
+    t.string   "name",                                      null: false
     t.string   "full_name"
     t.decimal  "current_price"
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-    t.boolean  "historical_data_logged"
-    t.datetime "last_updated_tick_time"
-    t.boolean  "intraday_log_error"
     t.decimal  "volatility"
-    t.integer  "historical_api_id"
+    t.datetime "last_updated_tick_time"
+    t.boolean  "currently_collecting_data", default: false
+    t.boolean  "showing_patterns"
+    t.boolean  "historical_data_logged"
+    t.boolean  "intraday_log_error"
     t.boolean  "favorite"
     t.boolean  "disabled"
+    t.datetime "created_at",                                null: false
+    t.datetime "updated_at",                                null: false
   end
 
   add_index "syms", ["current_price"], name: "index_syms_on_current_price", using: :btree
+  add_index "syms", ["disabled"], name: "index_syms_on_disabled", using: :btree
+  add_index "syms", ["favorite"], name: "index_syms_on_favorite", using: :btree
   add_index "syms", ["full_name"], name: "index_syms_on_full_name", using: :btree
+  add_index "syms", ["historical_api_id"], name: "index_syms_on_historical_api_id", using: :btree
+  add_index "syms", ["intraday_api_id"], name: "index_syms_on_intraday_api_id", using: :btree
   add_index "syms", ["market_id"], name: "index_syms_on_market_id", using: :btree
   add_index "syms", ["name"], name: "index_syms_on_name", using: :btree
+  add_index "syms", ["volatility"], name: "index_syms_on_volatility", using: :btree
 
   create_table "ticks", force: :cascade do |t|
-    t.integer  "sym_id",     null: false
     t.datetime "time",       null: false
     t.decimal  "amount",     null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "day_id"
   end
 
   add_index "ticks", ["amount"], name: "index_ticks_on_amount", using: :btree
-  add_index "ticks", ["sym_id"], name: "index_ticks_on_sym_id", using: :btree
   add_index "ticks", ["time"], name: "index_ticks_on_time", using: :btree
 
 end

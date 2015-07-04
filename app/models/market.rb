@@ -1,5 +1,6 @@
 class Market < ActiveRecord::Base
   has_many :syms, dependent: :destroy
+  has_many :days, through: :syms
 
   scope :by_importance, -> { order(:id) }
 
@@ -13,6 +14,12 @@ class Market < ActiveRecord::Base
 
   def closed?
     !open?
+  end
+
+  def last_day_curated
+    read_attribute(:last_day_curated) ||
+      days.order(:date).last.date ||
+      'Jan 1, 1900'.to_date
   end
 
   private

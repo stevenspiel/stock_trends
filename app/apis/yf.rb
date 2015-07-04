@@ -16,16 +16,17 @@ class Yf
     days = [days, 15].min # api won't allow for more than 15 days
     data = intraday_data(sym, days)
     if data.any?
-      Day.import(data)
       ticks = data.flat_map(&:ticks)
-      ticks.each { |tick| tick.day_id = tick.day.id } # update ticks' day_id
-      log_historical(sym, Date.today - days.days)
-      Tick.import(ticks)
+      new_ticks = ticks.reject(&:id)
+      new_ticks.each { |tick| tick.day_id = tick.day.id } # update ticks' day_id
+      Tick.import(new_ticks)
+      starting_date = Date.today - days.days
+      log_historical(sym, starting_date)
       sym.update_columns(
         volatility: sym.calculate_volatility,
         current_price: ticks.max_by(&:time).try(:price) || sym.current_price # if there are no ticks, it keeps the current price
       )
-      print "Imported #{ticks.size.to_s.rjust(4, ' ')} ticks (#{data.size} days)"
+      print "Imported #{new_ticks.size.to_s.rjust(4, ' ')} ticks (#{data.size} days)"
     else
       print 'No Ticks to import'
     end
@@ -34,8 +35,10 @@ class Yf
   def intraday_data(sym, days)
     csv_data = csv_data(sym, days)
     csv_data.map do |day, tick_data|
-      day = Day.new(date: day, sym_id: sym.id)
-      tick_data.map do |(time, amount)|
+      day = Day.find_or_create_by(date: day, sym_id: sym.id)
+      existing_ticks_times = day.ticks.pluck(:time)
+      tick_data.each do |(time, amount)|
+        next if existing_ticks_times.include? time # avoid adding the same tick twice
         day.ticks.build(time: time, amount: amount)
       end
       day.add_endpoints
