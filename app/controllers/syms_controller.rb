@@ -27,7 +27,7 @@ class SymsController < ApplicationController
 
   def favorites
     @syms = Sym.favorited.paginate(page: params[:page], per_page: 10)
-    build_charts(@syms)
+    build_charts(*@syms)
   end
 
   def toggle_favorite
@@ -39,34 +39,20 @@ class SymsController < ApplicationController
     session[:search_results] = request.url
     transform_search_params!
     @q = Sym.ransack(params[:q])
-    @syms = @q.result.successful_intraday.enabled.ordered.paginate(page: params[:page], per_page: 10)
-    build_charts(@syms)
+    @syms = @q.result.enabled.ordered.paginate(page: params[:page], per_page: 10)
+    build_charts(*@syms)
   end
 
   def show
     @sym = Sym.find(params[:id])
-    @sym.week_charts = week_day_charts(@sym) << past_n_days_chart(@sym)
-    @sym.historical_chart = historical_chart(@sym)
-  end
-
-  def destroy
-    Sym.find(params[:id]).update_column(:disabled, true)
-    render nothing: true
-  end
-
-  def rerun_historical
-    sym = Sym.find(params[:id])
-    api = Api.find(params[:api_id])
-    sym.historical_datums.each(&:destroy)
-    api.model_class.to_s.constantize.new.log_historical(sym)
-    redirect_to sym_path(sym)
+    build_charts(@sym)
   end
 
   private
 
-  def build_charts(syms)
+  def build_charts(*syms)
     syms.each do |sym|
-      sym.week_charts = week_day_charts(sym) << past_n_days_chart(sym)
+      sym.week_charts = [*week_day_charts(sym), past_n_days_chart(sym)]
       sym.historical_chart = historical_chart(sym)
     end
   end
