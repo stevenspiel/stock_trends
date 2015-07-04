@@ -4,6 +4,7 @@ class CreateMarkets < ActiveRecord::Migration
       t.string :name, index: true, null: false, unique: true
       t.decimal :hour_opens, null: false
       t.decimal :hour_closes, null: false
+      t.datetime :last_curated_at
       t.timestamps null: false
     end
   end
