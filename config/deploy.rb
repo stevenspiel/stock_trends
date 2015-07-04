@@ -48,28 +48,3 @@ set :default_env, { path: "#{rvm_paths}:$PATH" }
 
 # Default value for keep_releases is 5
 set :keep_releases, 2
-
-# namespace :deploy do
-#   desc 'symlink assets into the current release path'
-#   task :configure_shared_assets do
-#     on roles(:app) do
-#       within "#{shared_path}" do
-#         execute "ln -nsf #{shared_path}/config/database.yml #{release_path}/config/database.yml"
-#         execute "ln -nsf #{shared_path}/config/server.yml #{release_path}/config/server.yml"
-#         execute "ln -nsf #{shared_path}/config/keys.yml #{release_path}/config/keys.yml"
-#         execute "ln -nsf #{shared_path}/config/secrets.yml #{release_path}/config/secrets.yml"
-#       end
-#     end
-#   end
-# end
-# after 'deploy:assets:precompile', 'deploy:configure_shared_assets'
-
-# namespace :bundle do
-#   desc 'run bundle install and ensure all gem requirements are met'
-#   task :install do
-#     on roles(:all) do
-#       execute "cd #{current_path} && bundle install"
-#     end
-#   end
-# end
-# before 'deploy:assets:precompile', 'bundle:install'
