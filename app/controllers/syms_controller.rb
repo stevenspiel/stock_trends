@@ -37,7 +37,7 @@ class SymsController < ApplicationController
 
   def index
     session[:search_results] = request.url
-    transform_params!
+    transform_search_params!
     @q = Sym.ransack(params[:q])
     @syms = @q.result.successful_intraday.enabled.ordered.paginate(page: params[:page], per_page: 10)
     build_charts(@syms)
@@ -71,9 +71,8 @@ class SymsController < ApplicationController
     end
   end
 
-  def transform_params!
+  def transform_search_params!
     _ins = params.fetch(:q, {}).keys.select{|key| key.to_s[-3..-1] == '_in'}
     _ins.each { |key| params[:q][key] = params[:q][key].to_s.split(',') }
   end
-
 end
