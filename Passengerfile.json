@@ -1,0 +1,11 @@
+http {
+  passenger_root ~/.rvm/gems/ruby-2.2.2/gems/passenger-5.0.9;
+  passenger_ruby ~/.rvm/gems/ruby-2.2.2/wrappers/ruby;
+
+  server {
+    passenger_enabled on;
+    server_name www.stocktrends.co;
+    root ~/stock_trends/public;
+  }
+}
+
