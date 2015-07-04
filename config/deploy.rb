@@ -19,9 +19,6 @@ set :shared_path, "#{deploy_path}/shared"
 set :releases_path, "#{deploy_path}"
 set :current_path, "#{deploy_path}"
 
-# Default branch is :master
-ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
-
 # Default deploy_to directory is /var/www/my_app_name
 set :deploy_to, "#{deploy_path}"
 
