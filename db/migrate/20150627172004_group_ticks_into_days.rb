@@ -17,8 +17,8 @@ class GroupTicksIntoDays < ActiveRecord::Migration
   include ActionView::Helpers::DateHelper
 
   def up
-    # add_column :ticks, :day_id, :integer, index: true
-    
+    add_column :ticks, :day_id, :integer, index: true
+
     completed = 0
     total_number_of_syms = Sym.count
     total_seconds_elapsed = 0
