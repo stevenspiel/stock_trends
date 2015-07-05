@@ -48,3 +48,7 @@ group :development do
   gem 'capistrano-rvm', require: false
   gem 'capistrano-maintenance', github: 'capistrano/maintenance', require: false
 end
+
+group :production do
+  gem 'google-analytics-rails'
+end
