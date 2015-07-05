@@ -45,7 +45,7 @@ module ChartsHelper
           name: 'Price',
           data: data,
           color: '#21ce99',
-          fillColor: { linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 }, stops: [[0, '#21ce99'], [1, '#21ce99']] }
+          # fillColor: { linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 }, stops: [[0, '#21ce99'], [1, '#21ce99']] }
         })
       f.navigator(enabled: false)
     end
