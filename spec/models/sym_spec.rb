@@ -8,7 +8,7 @@ describe Sym do
     it { should have_many(:historical_datums).order(:date).dependent(:destroy) }
   end
 
-  describe 'to_s' do
+  describe '#to_s' do
     let(:subject) { described_class.new(name: 'foo') }
     it 'returns the name' do
       expect(subject.to_s).to eq(subject.name)
