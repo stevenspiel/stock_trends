@@ -45,3 +45,11 @@ set :default_env, { path: "#{rvm_paths}:$PATH" }
 
 # Default value for keep_releases is 5
 set :keep_releases, 2
+
+namespace :deploy do
+  after :restart do
+    on roles(:web) do
+      execute("touch #{deploy_path}/tmp/restart.txt")
+    end
+  end
+end
