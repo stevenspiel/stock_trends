@@ -1,19 +1,4 @@
-<div class="col-md-4 sym-options">
-  <!-- <div class="btn-group option">
-    <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
-      <%#= sym.historical_api || 'Select API' %> <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu" role="menu">
-      <%# Api.all.each do |api| %>
-        <%# next if api == sym.historical_api %>
-        <li><%#= link_to "Run with #{api}", rerun_historical_sym_path(sym, api_id: api.id) %></li>
-      <%# end %>
-    </ul>
-  </div> -->
-  <div class="option">
-    <%= link_to fa_icon('star-o'), toggle_favorite_sym_path(sym), method: :post, remote: true,
-      id: "favorite-#{sym.id}", class: "icon #{ 'active' if sym.favorite }" %>
-  </div>
+<div class="option">
+  <%= link_to fa_icon('star-o'), toggle_favorite_sym_path(sym), method: :post, remote: true,
+    id: "favorite-#{sym.id}", class: "icon #{ 'active' if sym.favorite }", title: 'Mark as Favorite' %>
 </div>
-
-

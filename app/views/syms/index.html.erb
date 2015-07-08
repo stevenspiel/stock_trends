@@ -5,13 +5,14 @@
 
     <div class="row title">
       <h2>
-        <%= render 'sym_options', sym: sym %>
+        <div class="col-md-4">
+          <%# noop %>
+        </div>
         <div class="col-md-4">
           <%= link_to sym_title(sym), sym_path(sym) %>
         </div>
-        <div class="col-md-4">
-          <%#= link_to(fa_icon('times-circle', class: 'warning'), sym_path(sym, q: @q, redirect: :index), method: :delete, remote: true,
-            data: { destroy: :sym }) %>
+        <div class="col-md-4 sym-options">
+          <%= render 'sym_options', sym: sym %>
         </div>
       </h2>
     </div>

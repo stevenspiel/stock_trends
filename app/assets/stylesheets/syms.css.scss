@@ -12,13 +12,14 @@
 .row.title {
   .sym-options {
     .option {
-      float: left;
-      margin-right: .3em;
+      float: right;
+      margin-left: .3em;
 
       a {
         display: inline-block;
         color: #CCCCCC;
-        &:hover, &:visited, &:focus, &:active { i { color: #CCCCCC; }}
+        &:visited, &:focus, &:active { i { color: #CCCCCC; }}
+        &:hover, &:visited &:hover { i { color: #AAAAAA } }
 
         &.active {
           color: #21ce99;
