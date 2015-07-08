@@ -4,7 +4,10 @@ module ChartsHelper
     return nil unless data
     LazyHighCharts::HighChart.new('spline') do |f|
       f.zoomType(:x)
-      f.title(text: historical_title(sym))
+      f.title({
+        text: historical_title(sym),
+        style: { color: '#000000' }
+      })
       f.xAxis(type: 'datetime')
       f.tooltip(pointFormat: 'Price: ${point.y:.2f}')
       f.legend(enabled: false)
