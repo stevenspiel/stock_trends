@@ -10,14 +10,18 @@ require 'action_view/railtie'
 require 'sprockets/railtie'
 # require "rails/test_unit/railtie"
 
+require './lib/ext/time'
+
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
 module StockTrends
   class Application < Rails::Application
+
     config.autoload_paths += %W(#{config.root}/app/apis)
     config.autoload_paths += %W(#{config.root}/app/services)
+    config.autoload_paths += %W(#{config.root}/app/presenters)
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers

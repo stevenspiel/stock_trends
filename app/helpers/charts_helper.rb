@@ -51,14 +51,17 @@ module ChartsHelper
     end
   end
 
-  def week_day_charts(sym)
-    n_weeks = 5
-    (1..5).to_a.map do |day_of_week|
-      data = sym.intraday_data(day_of_week, n_weeks)
+  def week_day_charts(ticks)
+    grouped_by_day_of_week = ticks.pluck(:time, :amount).group_by { |(time, _)| time.strftime('%u').to_i }
+    Hash[grouped_by_day_of_week.sort].map do |day_of_week, data_points|
+      grouped_by_week = data_points.group_by { |(time, _)| time.strftime('%U') }
+      sorted_grouped_by_week = Hash[grouped_by_week.sort]
+      data_sets = SymPresenter.highchart_data_sets(sorted_grouped_by_week)
+      next unless data_sets.present?
       LazyHighCharts::HighChart.new('spline') do |f|
-        f.title(text: Sym.week_day(day_of_week))
+        f.title(text: SymPresenter.week_day(day_of_week))
 
-        data.each do |data|
+        data_sets.each do |data|
           f.series(name: data[:name], data: data[:data])
         end
 
@@ -67,7 +70,7 @@ module ChartsHelper
         f.legend(align: 'right', verticalAlign: 'top', y: 75, x: 0, layout: 'vertical')
         f.tooltip(formatter: "function(){ return this.series.name + ' ' + (moment(this.x + 1000*3600*4)).format(' hh:mm') + '<br><b>$' + this.y + '</b>' }".js_code)
         # f.colors(n_days.times.map{|n| "rgba(0, 0, 0, #{ ( 1.to_f / (n + 1)**1.75 ).round(2)})" }.reverse)
-        f.colors(data.size.times.map{|n| "rgba(69, 213, 161, #{ ( 1.to_f / (n + 1)**1.1 ).round(2)})" }.reverse[(data.size * -1)..-1])
+        f.colors(data_sets.size.times.map{|n| "rgba(69, 213, 161, #{ ( 1.to_f / (n + 1)**1.1 ).round(2)})" }.reverse[(data_sets.size * -1)..-1])
         f.chart(height: 300)
         f.plotOptions({
             series: {
@@ -85,12 +88,15 @@ module ChartsHelper
     end
   end
 
-  def past_n_days_chart(sym, n_days = 5)
+  def past_n_days_chart(ticks, n_days)
+    relevant_ticks = ticks.where('time > ?', Date.today - (n_days + 3).days).pluck(:time, :amount) # add 3 days for possible 3 day weekends
+    grouped_by_day_sorted = Hash[relevant_ticks.group_by { |(time, amount)| time.to_date }.to_a.last(n_days).sort] # use only the most recent n_days
+    data_sets = SymPresenter.highchart_data_sets(grouped_by_day_sorted)
+    return unless data_sets.present?
     LazyHighCharts::HighChart.new('spline') do |f|
       f.title(text: "Past #{n_days} Work Days")
 
-      past_work_days = sym.past_work_days(n_days)
-      past_work_days.each do |data|
+      data_sets.each do |data|
         f.series(name: data[:name], data: data[:data])
       end
 
@@ -98,7 +104,7 @@ module ChartsHelper
       f.yAxis(labels: { formatter: "function(){ return '$' + this.value.toFixed(2) }".js_code}, title: { text: nil })
       f.legend(align: 'right', verticalAlign: 'top', y: 75, x: 0, layout: 'vertical')
       f.tooltip(formatter: "function(){ return this.series.name + ' ' + (moment(this.x + 1000*3600*4)).format(' hh:mm') + '<br><b>$' + this.y + '</b>' }".js_code)
-      f.colors(past_work_days.size.times.map{|n| "rgba(69, 213, 161, #{ ( 1.to_f / (n + 1)**1.1 ).round(2)})" }.reverse)
+      f.colors(data_sets.size.times.map{|n| "rgba(69, 213, 161, #{ ( 1.to_f / (n + 1)**1.1 ).round(2)})" }.reverse)
       f.chart(height: 300)
       f.plotOptions({
           series: {

@@ -52,7 +52,10 @@ class SymsController < ApplicationController
 
   def build_charts(*syms)
     syms.each do |sym|
-      sym.week_charts = [*week_day_charts(sym), past_n_days_chart(sym)]
+      n_weeks = 5
+      n_days = 5
+      relevant_ticks = sym.ticks.where('date >= ?', Date.today - n_weeks.weeks)
+      sym.week_charts = [*week_day_charts(relevant_ticks), past_n_days_chart(relevant_ticks, n_days)]
       sym.historical_chart = historical_chart(sym)
     end
   end

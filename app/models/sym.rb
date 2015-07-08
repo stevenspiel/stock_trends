@@ -1,6 +1,4 @@
 class Sym < ActiveRecord::Base
-  WEEK_DAYS = %w(Sun Mon Tue Wed Thur Fri Sat)
-
   attr_accessor :week_charts, :historical_chart
 
   belongs_to :market
@@ -24,10 +22,6 @@ class Sym < ActiveRecord::Base
   scope :enabled, -> { where(disabled: [nil, false]) }
   scope :greater_than, -> (sym) { where('id > ?', sym.id) }
   scope :ordered, -> { order(:name) }
-
-  def self.week_day(n)
-    WEEK_DAYS[n]
-  end
 
   def to_s
     name
@@ -61,25 +55,6 @@ class Sym < ActiveRecord::Base
     data.map{ |datum| [(datum[0].strftime('%s').to_i * 1000), datum[1].to_f] }
   end
 
-  def intraday_data(day_number, n_weeks = nil)
-    days_for_weeks = days.reorder({date: :desc}).where('EXTRACT(DOW FROM date) = ?', day_number).limit(n_weeks)
-    days_for_weeks.map do |day|
-      {
-        name: day.to_s,
-        data: day_shifted_data(day.ticks.pluck(:time, :amount))
-      }
-    end
-  end
-
-  def past_work_days(n_days)
-    stacked_consecutive_days(n_days).map do |date, data_points|
-      {
-        name: date.strftime('%b %d'),
-        data: day_shifted_data(data_points)
-      }
-    end
-  end
-
   def min_and_max_tick_amounts(days)
     ticks = days.map(&:ticks).inject(:merge)
     { min: ticks.minimum(:amount), max: ticks.maximum(:amount) }
@@ -96,47 +71,4 @@ class Sym < ActiveRecord::Base
   def in_price_range(low, high)
     where("current_price > #{low} AND current_price < #{high}")
   end
-
-  def day_shifted_data(data_points)
-    data_points.map do |data_point|
-      [day_offset_time(data_point), data_point[1].to_f]
-    end
-  end
-
-  def week_offset_time(data_point, week_number)
-    offset = data_point[0] + (current_week_number - week_number).weeks
-    (offset - 4.hours).strftime('%s').to_i * 1000
-  end
-
-  def day_offset_time(data_point)
-    # what if today is not a business day?
-    offset = (Date.today - data_point[0].to_date).to_i
-    ((data_point[0] + offset.days) - 4.hours).strftime('%s').to_i * 1000
-  end
-
-  def stacked_consecutive_days(n_days)
-    n_days_ids = days.reorder({date: :desc}).limit(n_days).pluck(:id)
-    combined_scope = Tick.where(day_id: n_days_ids)
-    return [] unless combined_scope
-    combined_scope.order(:time).pluck(:time, :amount).group_by { |datum| datum[0].to_date }
-  end
-
-  def current_week_number
-    Date.today.strftime('%U').to_i
-  end
-
-  def n_weeks_ago(day_number, n_weeks)
-    today = Time.current.to_date
-    if today.wday == day_number
-      delta = today - 1.week
-    elsif today.wday > day_number
-      beginning_of_this_week = today - today.wday
-      delta = beginning_of_this_week + day_number.days
-    else
-      beginning_of_last_week = today - (today.wday - 1).week
-      delta = beginning_of_last_week + day_number.days
-    end
-    delta - (n_weeks - 1).weeks
-  end
-
 end

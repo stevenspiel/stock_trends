@@ -59,10 +59,13 @@ class Yf
   def log_historical(sym, start_date = '1 Jan 1900'.to_date)
     data = historical_data(sym, start_date)
     return data if not_successful?(data)
+    existing_historical_data_days = HistoricalDatum.where(sym: sym).where('date > ?', start_date).pluck(:date)
     if data.try(:each)
       data.shift # skip header
       historical_data = data.map do |line|
-        next if line[0].to_date < start_date
+        date = line[0].to_date
+        next if date < start_date
+        next if date.in?(existing_historical_data_days) # avoid logging same day multiple times
         sym.historical_datums.build(date: line[0], opening_price: line[1], closing_price: line[4])
       end.compact
       HistoricalDatum.import(historical_data)
