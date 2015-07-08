@@ -17,5 +17,5 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :disclaimer, only: :index
+  get 'disclaimer' => 'disclaimer#show'
 end
