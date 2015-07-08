@@ -1,6 +1,5 @@
 module ChartsHelper
-  def historical_chart(sym)
-    data = sym.historical_data
+  def historical_chart(data, sym)
     return nil unless data
     LazyHighCharts::HighChart.new('spline') do |f|
       f.zoomType(:x)

@@ -35,6 +35,22 @@ class Sym < ActiveRecord::Base
     name.ljust(7, string)
   end
 
+  def five_weeks_cached
+    Rails.cache.fetch([self.class.name, id, :ticks], expires_in: 12.hours) do
+      ticks.where('date >= ?', Date.today - 5.weeks).pluck(:time, :amount)
+    end
+  end
+
+  def historical_data_cached
+    Rails.cache.fetch([self.class.name, id, :historical_data], expires_in: 12.hours) do
+      data_points = historical_datums.count
+      return if data_points == 0
+      skip = ([data_points, 1000].max / 1000.to_f).ceil # only pull a subset of data
+      data = historical_datums.where("id%#{skip}=0").pluck(:date, :closing_price)
+      data.map { |datum| [(datum[0].strftime('%s').to_i * 1000), datum[1].to_f] }
+    end
+  end
+
   def last_tick_logged
     last_day_logged = days.with_ticks.last || Day.new
     last_day_logged.ticks.last || Tick.new(time: 'Jan 1 1900'.to_date)
@@ -45,14 +61,6 @@ class Sym < ActiveRecord::Base
     values = min_and_max_tick_amounts(relevant_days)
     return unless values.values.any?(&:present?)
     100 - ((values[:min] * 100) / values[:max]).round(3)
-  end
-
-  def historical_data(max_points = 1000)
-    data_points = historical_datums.count
-    return if data_points == 0
-    skip = ([data_points, max_points].max / max_points.to_f).ceil
-    data = historical_datums.where("id%#{skip}=0").pluck(:date, :closing_price)
-    data.map{ |datum| [(datum[0].strftime('%s').to_i * 1000), datum[1].to_f] }
   end
 
   def min_and_max_tick_amounts(days)
