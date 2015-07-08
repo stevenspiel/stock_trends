@@ -1,6 +1,7 @@
 server = YAML.load_file(File.expand_path('../../config/server.yml',__FILE__))
 deploy_path = server['deploy_path']
 rvm_paths = server['rvm_paths']
+linked_path = server['linked_paths']
 
 set :user, server[:user]
 set :rvm_ruby_string, '2.2.2'
@@ -37,9 +38,6 @@ set :pty, true
 # Default value for :linked_files is []
 set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/keys.yml', 'config/secrets.yml', 'config/server.yml')
 
-# Default value for linked_dirs is []
-# set :linked_dirs, fetch(:linked_dirs, []).push('log', 'public/uploads', 'uploads')
-
 # Default value for default_env is {}
 set :default_env, { path: "#{rvm_paths}:$PATH" }
 
@@ -47,9 +45,11 @@ set :default_env, { path: "#{rvm_paths}:$PATH" }
 set :keep_releases, 2
 
 namespace :deploy do
-  after :restart do
-    on roles(:web) do
-      execute("touch #{deploy_path}/tmp/restart.txt")
+  desc 'restart tmp/restart.txt'
+  task :restart_tmp_txt do
+    on roles(:all) do
+      execute "touch #{linked_path}/tmp/restart.txt"
     end
   end
 end
+after 'deploy:restart', 'deploy:restart_tmp_txt'
