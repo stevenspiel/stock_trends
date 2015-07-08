@@ -138,3 +138,17 @@ nav {
     }
   }
 }
+
+#footer {
+  background: #f1f1f1;
+  text-align: center;
+  padding: 4em;
+
+  a {
+    color: #777;
+
+    &:hover {
+      color: #21ce99;
+    }
+  }
+}

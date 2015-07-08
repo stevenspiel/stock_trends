@@ -30,20 +30,23 @@
 }
 
 .apple_pagination {
-  background: #f1f1f1;
-  border: 1px solid #e5e5e5;
+  background: transparent;
+  border: none;
   text-align: center;
-  padding: 1em;
+  padding: 2em 3em 3em;
+  font-size: 1.2em;
   cursor: default;
   a {
     padding: 0.2em 0.3em;
     text-decoration: none;
     color: #000;
-    &:hover {
-      text-decoration: underline;
-    }
-    &:focus {
-      text-decoration: underline;
+
+    &:visited {
+      color: #000;
+
+      &:hover {
+        color: #21ce99;
+      }
     }
   }
   span {
@@ -55,7 +58,7 @@
   .current {
     font-style: normal;
     font-weight: bold;
-    background-color: #bebebe;
+    background-color: #f1f1f1;
     display: inline-block;
     width: 1.4em;
     height: 1.4em;

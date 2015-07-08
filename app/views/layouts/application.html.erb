@@ -23,5 +23,10 @@
   <%= yield %>
 </div>
 
+<div id="footer">
+  <div class="copyright">Copyright © <%= Date.today.year %> <%= link_to 'Steven Spiel', 'http://www.stevenspiel.com' %>. All Rights Reserved</div>
+  <div class="disclaimer"><%= link_to 'Disclaimer', disclaimer_path %></div>
+</div>
+
 </body>
 </html>
