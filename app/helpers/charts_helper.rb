@@ -52,7 +52,7 @@ module ChartsHelper
   end
 
   def week_day_charts(ticks)
-    grouped_by_day_of_week = ticks.pluck(:time, :amount).group_by { |(time, _)| time.strftime('%u').to_i }
+    grouped_by_day_of_week = ticks.group_by { |(time, _)| time.strftime('%u').to_i }
     Hash[grouped_by_day_of_week.sort].map do |day_of_week, data_points|
       grouped_by_week = data_points.group_by { |(time, _)| time.strftime('%U') }
       sorted_grouped_by_week = Hash[grouped_by_week.sort]
@@ -89,8 +89,9 @@ module ChartsHelper
   end
 
   def past_n_days_chart(ticks, n_days)
-    relevant_ticks = ticks.where('time > ?', Date.today - (n_days + 3).days).pluck(:time, :amount) # add 3 days for possible 3 day weekends
-    grouped_by_day_sorted = Hash[relevant_ticks.group_by { |(time, amount)| time.to_date }.to_a.last(n_days).sort] # use only the most recent n_days
+    earliest_date = Date.today - (n_days + 3).days # add 3 days for possible 3 day weekends
+    relevant_ticks = ticks.select { |(time, _)| time > earliest_date }
+    grouped_by_day_sorted = Hash[relevant_ticks.group_by { |(time, _)| time.to_date }.to_a.last(n_days).sort] # to_a.last trims extra days
     data_sets = SymPresenter.highchart_data_sets(grouped_by_day_sorted)
     return unless data_sets.present?
     LazyHighCharts::HighChart.new('spline') do |f|
