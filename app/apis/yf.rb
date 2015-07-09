@@ -11,7 +11,7 @@ class Yf
   end
 
   def log_intraday_history(sym)
-    days = (Date.today - sym.last_tick_logged.time.to_date).to_i
+    days = (Date.today - sym.last_tick_logged.time.to_date).to_i - 1
     return print 'Already up to date!' if days == 0
     days = [days, 15].min # api won't allow for more than 15 days
     data = intraday_data(sym, days)
@@ -39,7 +39,9 @@ class Yf
     csv_data.map do |day, tick_data|
       day = Day.find_or_create_by(date: day, sym_id: sym.id)
       existing_ticks_times = day.ticks.pluck(:time)
+      last_tick_of_day = existing_ticks_times.max
       tick_data.each do |(time, amount)|
+        next if time < last_tick_of_day # begin import for when last tick was logged
         next if existing_ticks_times.include? time # avoid adding the same tick twice
         day.ticks.build(time: time, amount: amount)
       end
