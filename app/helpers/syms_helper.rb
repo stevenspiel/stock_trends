@@ -8,9 +8,9 @@ module SymsHelper
   end
 
   def historical_title(sym)
-    dates = sym.min_and_max_historical_dates
-    min = dates[:min].present? ? dates[:min].strftime('%Y') : '?'
-    max = dates[:max].present? ? dates[:max].strftime('%Y') : '?'
-    "#{min} - #{max}"
+    dates = sym.cached(:min_and_max_historical_dates)
+    min_year = dates[:min].strftime('%Y')
+    max_year = dates[:max].strftime('%Y')
+    "#{min_year} - #{max_year}"
   end
 end

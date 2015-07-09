@@ -52,9 +52,9 @@ class SymsController < ApplicationController
 
   def build_charts(*syms)
     syms.each do |sym|
-      relevant_ticks = sym.five_weeks_cached
+      relevant_ticks = sym.cached(:five_weeks)
       sym.week_charts = [*week_day_charts(relevant_ticks), past_n_days_chart(relevant_ticks, 5)]
-      sym.historical_chart = historical_chart(sym.historical_data_cached, sym)
+      sym.historical_chart = historical_chart(sym.cached(:historical_data), sym)
     end
   end
 

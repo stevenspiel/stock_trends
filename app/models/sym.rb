@@ -35,20 +35,37 @@ class Sym < ActiveRecord::Base
     name.ljust(7, string)
   end
 
-  def five_weeks_cached
-    Rails.cache.fetch([self.class.name, id, :ticks], expires_in: 24.hours) do # cache cleared after data import
-      ticks.where('date >= ?', Date.today - 5.weeks).pluck(:time, :amount)
+  def reset_cached_data(keys)
+    keys.each do |key|
+      Rails.cache.delete(cache_key(key))
+      cached(key)
     end
   end
 
-  def historical_data_cached
-    Rails.cache.fetch([self.class.name, id, :historical_data], expires_in: 24.hours) do # cache cleared after data import
-      data_points = historical_datums.count
-      return if data_points == 0
-      skip = ([data_points, 1000].max / 1000.to_f).ceil # only pull a subset of data
-      data = historical_datums.where("id%#{skip}=0").pluck(:date, :closing_price)
-      data.map { |datum| [(datum[0].strftime('%s').to_i * 1000), datum[1].to_f] }
+  def cached(key)
+    Rails.cache.fetch(cache_key(key), expires_in: 24.hours) do
+      send(key)
     end
+  end
+
+  def cache_key(key)
+    [self.class.name, id, key]
+  end
+
+  def five_weeks
+    ticks.where('date >= ?', Date.today - 5.weeks).pluck(:time, :amount)
+  end
+
+  def historical_data
+    data_points = historical_datums.count
+    return if data_points == 0
+    skip = ([data_points, 1000].max / 1000.to_f).ceil # only pull a subset of data
+    data = historical_datums.where("id%#{skip}=0").pluck(:date, :closing_price)
+    data.map { |datum| [(datum[0].strftime('%s').to_i * 1000), datum[1].to_f] }
+  end
+
+  def min_and_max_historical_dates
+    { min: historical_datums.minimum(:date), max: historical_datums.maximum(:date) }
   end
 
   def last_tick_logged
