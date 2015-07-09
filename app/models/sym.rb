@@ -35,7 +35,7 @@ class Sym < ActiveRecord::Base
     name.ljust(7, string)
   end
 
-  def reset_cached_data(keys)
+  def reset_cached_data(*keys)
     keys.each do |key|
       Rails.cache.delete(cache_key(key))
       cached(key)
