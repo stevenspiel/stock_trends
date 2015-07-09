@@ -17,7 +17,7 @@ class Yf
     data = intraday_data(sym, days)
     if data.any?
       ticks = data.flat_map(&:ticks)
-      new_ticks = ticks.reject(&:id)
+      new_ticks = ticks.reject(&:persisted?)
       new_ticks.each { |tick| tick.day_id = tick.day.id } # update ticks' day_id
       Tick.import(new_ticks)
       starting_date = Date.today - days.days
@@ -100,11 +100,6 @@ class Yf
       data_grouped_by_day[day] << [time, amount]
     end
     data_grouped_by_day
-  end
-
-  def day_not_finished?(time)
-    # Needs TLC
-    time.to_date == Time.now.in_time_zone('Eastern Time (US & Canada)').to_date
   end
 
   def not_successful?(error)
