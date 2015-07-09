@@ -17,7 +17,8 @@ class Log
       market.syms.send(scope).where(where).find_each do |sym|
         begin
           print "Logging Intraday Ticks for #{sym.market} - #{sym.padded}"
-          api.log_intraday_history(sym)
+          success = api.log_intraday_history(sym)
+          sym.reset_cached_data(:five_weeks, :historical_data, :min_and_max_historical_dates) if success
         rescue => e
           binding.pry if Rails.env.development?
         end
@@ -42,6 +43,7 @@ class Log
             puts "#{sym.padded} - $#{sym.current_price}"
           end
         rescue => e
+          puts e
           binding.pry if Rails.env.development?
         end
       end
@@ -56,6 +58,7 @@ class Log
           print "Logging Historical Data for #{sym.market} - #{sym.padded('.')}..."
           result = api.log_historical(sym)
           return if api.not_successful?(result) && api.handle_error(result, sym)
+          sym.reset_cached_data(:historical_data)
         rescue => e
           binding.pry if Rails.env.development?
         end

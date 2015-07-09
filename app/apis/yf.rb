@@ -27,8 +27,10 @@ class Yf
         current_price: ticks.max_by(&:time).try(:price) || sym.current_price # if there are no ticks, it keeps the current price
       )
       print "Imported #{new_ticks.size.to_s.rjust(4, ' ')} ticks (#{data.size} days)"
+      true
     else
       print 'No Ticks to import'
+      false
     end
   end
 
