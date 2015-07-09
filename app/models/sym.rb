@@ -36,13 +36,13 @@ class Sym < ActiveRecord::Base
   end
 
   def five_weeks_cached
-    Rails.cache.fetch([self.class.name, id, :ticks], expires_in: 12.hours) do
+    Rails.cache.fetch([self.class.name, id, :ticks], expires_in: 24.hours) do # cache cleared after data import
       ticks.where('date >= ?', Date.today - 5.weeks).pluck(:time, :amount)
     end
   end
 
   def historical_data_cached
-    Rails.cache.fetch([self.class.name, id, :historical_data], expires_in: 12.hours) do
+    Rails.cache.fetch([self.class.name, id, :historical_data], expires_in: 24.hours) do # cache cleared after data import
       data_points = historical_datums.count
       return if data_points == 0
       skip = ([data_points, 1000].max / 1000.to_f).ceil # only pull a subset of data
