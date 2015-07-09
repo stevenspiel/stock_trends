@@ -11,7 +11,7 @@ class Yf
   end
 
   def log_intraday_history(sym)
-    days = (Date.today - sym.last_tick_logged.time.to_date).to_i - 1
+    days = (Date.today - sym.last_tick_logged.time.to_date).to_i - 1 # the extra day has already been logged
     return print 'Already up to date!' if days == 0
     days = [days, 15].min # api won't allow for more than 15 days
     data = intraday_data(sym, days)
