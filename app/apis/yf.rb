@@ -41,6 +41,7 @@ class Yf
       existing_ticks_times = day.ticks.pluck(:time)
       last_tick_of_day = existing_ticks_times.max
       tick_data.each do |(time, amount)|
+        next if time > Date.today.beginning_of_day # want to change later. For now, only log yesterday's data
         next if last_tick_of_day && time < last_tick_of_day # begin import for when last tick was logged
         next if existing_ticks_times.include? time # avoid adding the same tick twice
         day.ticks.build(time: time, amount: amount)
