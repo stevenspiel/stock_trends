@@ -6,6 +6,7 @@ class Log
     @tk = Tk.new
     @q = Q.new
     @yf = Yf.new
+    @sym_count = Sym.count
     ActiveRecord::Base.logger = nil # suppress sql output
   end
 
@@ -82,9 +83,8 @@ class Log
 
   def percent_complete(scope: :all, sym: nil)
     remaining = sym ? Sym.send(scope, sym).count : Sym.send(scope).count
-    all = Sym.count
-    completed = all - remaining
-    percent_complete = (completed.to_f /  all) * 100
+    completed = @sym_count - remaining
+    percent_complete = (completed.to_f /  @sym_count) * 100
     " #{percent_complete.round(2)}%"
   end
 end

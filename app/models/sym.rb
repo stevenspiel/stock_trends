@@ -74,7 +74,7 @@ class Sym < ActiveRecord::Base
   end
 
   def calculate_volatility(number_of_days = 10)
-    relevant_days = days.reorder({date: :desc}).limit(number_of_days).to_a
+    relevant_days = days.reorder({ date: :desc }).limit(number_of_days).to_a
     values = min_and_max_tick_amounts(relevant_days)
     return unless values.values.any?(&:present?)
     100 - ((values[:min] * 100) / values[:max]).round(3)
@@ -83,17 +83,5 @@ class Sym < ActiveRecord::Base
   def min_and_max_tick_amounts(days)
     ticks = days.map(&:ticks).inject(:merge)
     { min: ticks.minimum(:amount), max: ticks.maximum(:amount) }
-  end
-
-  def min_and_max_historical_dates
-    { min: historical_datums.minimum(:date), max: historical_datums.maximum(:date) }
-  end
-
-  def penny_stocks
-    where('current_price < 1')
-  end
-
-  def in_price_range(low, high)
-    where("current_price > #{low} AND current_price < #{high}")
   end
 end
