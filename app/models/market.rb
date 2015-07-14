@@ -4,6 +4,10 @@ class Market < ActiveRecord::Base
 
   scope :by_importance, -> { order(:id) }
 
+  def self.nyse; find_by_name('New York Stock Exchange'); end
+  def self.nasdaq; find_by_name('NASDAQ'); end
+  def self.amex; find_by_name('AMEX'); end
+
   def to_s
     name
   end
