@@ -15,7 +15,7 @@ class Curator
       puts "...............#{date}..............."
       next unless any_existing_data_for_day?(date) # ignore weekends and holidays
       remove_empty_days(date)
-      @market.syms.find_each do |sym|
+      @market.syms.enabled.find_each do |sym|
         print "#{sym.padded}"
         day = Day.find_or_create_by(sym: sym, date: date)
         if day.ticks.count >= 2 # endpoints are all a Day needs to be viable
