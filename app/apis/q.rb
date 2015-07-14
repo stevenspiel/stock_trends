@@ -12,17 +12,19 @@ class Q
 
   def log_historical(sym)
     data = historical_data(sym)
-    return data if not_successful?(data)
-    if data.try(:each_line)
-      historical_data = data.map.each_with_index do |line, i|
-        next if i == 0
-        line = line.split(',')
-        sym.historical_datums.build(date: line[0], opening_price: line[1], closing_price: line[4])
-      end.compact
-      HistoricalDatum.import(historical_data)
-    end
+    return data unless data.respond_to?(:readlines)
+    build_and_save_data(sym, data)
     print 'Success'
     sym.update_columns(historical_data_logged: true)
+  end
+
+  def build_and_save_data(sym, data)
+    historical_data = data.map.each_with_index do |line, i|
+      next if i == 0
+      line = line.split(',')
+      sym.historical_datums.build(date: line[0], opening_price: line[1], closing_price: line[4])
+    end.compact
+    HistoricalDatum.import(historical_data)
   end
 
   def historical_data(symbol)
@@ -35,7 +37,7 @@ class Q
   end
 
   def not_successful?(error)
-    return true if error.is_a? StandardError
+    true if error.is_a? StandardError
   end
 
   def handle_error(error, sym)

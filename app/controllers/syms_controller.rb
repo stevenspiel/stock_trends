@@ -26,7 +26,7 @@ class SymsController < ApplicationController
   end
 
   def favorites
-    @syms = Sym.favorited.paginate(page: params[:page], per_page: 10)
+    @syms = Sym.favorited.enabled.paginate(page: params[:page], per_page: 10)
     build_charts(*@syms)
   end
 

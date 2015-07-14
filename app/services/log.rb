@@ -12,7 +12,7 @@ class Log
 
   def intraday(api: @yf)
     # cron runs nightly
-    Sym.ordered.find_each do |sym|
+    Sym.enabled.ordered.find_each do |sym|
       # First tick is opening price and last one is closing price
       begin
         print "Logging Intraday Ticks for #{sym.padded}"
@@ -28,7 +28,7 @@ class Log
   end
 
   def prices(api: @yf)
-    Sym.ordered.in_groups_of(BATCH_SIZE) do |group|
+    Sym.enabled.ordered.in_groups_of(BATCH_SIZE) do |group|
       begin
         symbols = group.compact.map(&:name)
         prices = api.prices(symbols)
@@ -48,7 +48,7 @@ class Log
   end
 
   def historical(api: @q)
-    Sym.pending_historical.ordered.find_each do |sym|
+    Sym.enabled.pending_historical.ordered.find_each do |sym|
       begin
         print "Logging Historical Data for #{sym.padded('.')}..."
         result = api.log_historical(sym)
