@@ -4,10 +4,10 @@ class Curator
   end
 
   def initialize(market)
+    ActiveRecord::Base.logger = nil # suppress sql output
     @market = market
     @last_day_curated = market.last_day_curated
     @today = Date.today
-    ActiveRecord::Base.logger = nil # suppress sql output
   end
 
   def run

@@ -2,12 +2,12 @@ class Log
   BATCH_SIZE = 500
 
   def initialize(*markets)
+    ActiveRecord::Base.logger = nil # suppress sql output
     @markets = markets.empty? ? Market.by_importance : markets
     @tk = Tk.new
     @q = Q.new
     @yf = Yf.new
     @sym_count = Sym.count
-    ActiveRecord::Base.logger = nil # suppress sql output
   end
 
   def intraday(api: @yf)
