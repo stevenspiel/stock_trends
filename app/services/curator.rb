@@ -18,7 +18,7 @@ class Curator
       @market.syms.find_each do |sym|
         print "#{sym.padded}"
         day = Day.find_or_create_by(sym: sym, date: date)
-        if day.ticks.size >= 2 # endpoints are all a Day needs to be viable
+        if day.ticks.count >= 2 # endpoints are all a Day needs to be viable
           print 'Valid'
         else
           print 'Curating...'
