@@ -22,7 +22,7 @@ class Q
       HistoricalDatum.import(historical_data)
     end
     print 'Success'
-    sym.update_columns(historical_data_logged: true, historical_api: @api)
+    sym.update_columns(historical_data_logged: true)
   end
 
   def historical_data(symbol)
