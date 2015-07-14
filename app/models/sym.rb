@@ -23,6 +23,10 @@ class Sym < ActiveRecord::Base
   scope :greater_than, -> (sym) { where('id > ?', sym.id) }
   scope :ordered, -> { order(:name) }
 
+  scope :nyse, -> { where('market.id = ?', Market.nyse.id) }
+  scope :nasdaq, -> { where('market.id = ?', Market.nasdaq.id) }
+  scope :amex, -> { where('market.id = ?', Market.amex.id) }
+
   def to_s
     name
   end
