@@ -24,7 +24,7 @@ class Curator
           print 'Curating...'
           curate(sym, day)
         end
-        puts # seperator
+        puts # separator
       end
     end
     @market.update_column(:last_day_curated, @today)
