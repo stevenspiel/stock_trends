@@ -22,7 +22,7 @@ class Curator
           print 'Valid'
         else
           print 'Curating...'
-          curate(sym, day)
+          curate_day(sym, day)
         end
         puts # separator
       end
@@ -32,7 +32,7 @@ class Curator
 
   private
 
-  def curate(sym, day)
+  def curate_day(sym, day)
     most_recent_tick = sym.ticks.where('time < ?', day.date.to_datetime).order(:time).last
     return print 'No ticks' unless most_recent_tick.present?
     most_recent_price = most_recent_tick.amount
