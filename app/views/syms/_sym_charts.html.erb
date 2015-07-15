@@ -10,7 +10,7 @@
     <%= high_stock(sym.id.to_s, sym.historical_chart) %>
   <% else %>
     <div class="row title">
-      <h4>No Data</h4>
+      <h4>Data Not Available</h4>
     </div>
   <% end %>
 </div>
@@ -23,7 +23,7 @@
           <%= high_chart("#{sym.id}-#{SecureRandom.hex}", chart) %>
         <% else %>
           <div class="row title">
-            <h4>No Data</h4>
+            <h4>Data Not Available</h4>
           </div>
         <% end %>
       </div>
