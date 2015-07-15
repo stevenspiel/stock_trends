@@ -14,6 +14,7 @@ class SingleUseCurator
       if sym.ticks.count < 30
         puts "Disabling #{sym}"
         sym.update_attribute(:disabled, true)
+        next
       end
 
       # re-log historical data if needed
