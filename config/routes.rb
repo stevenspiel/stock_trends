@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     member do
       get :rerun_historical
       post :toggle_favorite
+      post :disable
     end
     collection do
       get :autocomplete

@@ -1,3 +1,4 @@
 $ ->
-  $("[data-destroy='sym']").click (e) ->
-    $(e.target).parents('.sym').remove()
+  $("[data-disable='sym']").click (e) ->
+    $container = $(e.target).parents('.sym')
+    $container.remove()
