@@ -30,7 +30,7 @@ a, a:hover, a:active, a:visited, a:focus {
 
 nav {
   position: fixed;
-  height: 50px;
+  height: 55px;
   left: 0;
   right: 0;
   top: 0;
@@ -38,30 +38,96 @@ nav {
   z-index: 1000;
 
   h2#title {
-    text-align: left;
-    margin: 0 20px 0 20px;
-    line-height: 50px;
+    float: left;
+    font-size: 2.5em;
     font-weight: bold;
+    line-height: 55px;
+    margin: 0 20px 0 20px;
+    text-align: left;
+  }
 
-    .navigation {
+  .navigation {
+    float: right;
+    margin: 0 20px 0 20px;
+    display: inline-block;
+    font-size: 18px;
+
+    > a {
+      height: 55px;
+      line-height: 55px;
       float: right;
+      margin: 0 .9em;
+    }
 
-      a {
-        float: right;
-        padding-left: .4em;
+    .profile-picture {
+      cursor: pointer;
+      width: 45px;
+      height: 45px;
+      margin-top: 5px;
+      -webkit-border-radius: 100%;
+      -moz-border-radius: 100%;
+      border-radius: 100%;
+      float: right;
+      margin-left: 2em;
+    }
+
+    #user-nav {
+      display: none;
+      position: fixed;
+      top: 60px;
+      right: 15px;
+      z-index: 101;
+      background: #ffffff;
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      border-radius: 4px;
+      margin-top: 1px;
+      padding: 8px 11px 0;
+      text-align: right;
+
+      &:before {
+        border-bottom: 7px solid rgba(0, 0, 0, 0.2);
+        border-left: 7px solid rgba(0, 0, 0, 0);
+        border-right: 7px solid rgba(0, 0, 0, 0);
+        content: "";
+        display: inline-block;
+        left: 96px;
+        position: absolute;
+        top: -7px;
+      }
+
+      &:after {
+        border-bottom: 6px solid #FFFFFF;
+        border-left: 6px solid rgba(0, 0, 0, 0);
+        border-right: 6px solid rgba(0, 0, 0, 0);
+        content: "";
+        display: inline-block;
+        left: 97px;
+        position: absolute;
+        top: -6px;
+      }
+
+      ul {
+        margin: 0;
+        display: inline-block;
+
+        li {
+          list-style: none;
+
+          a {
+            float: right;
+            line-height: 24px;
+          }
+        }
       }
     }
   }
-
 }
+
+
 
 .container {
   margin-top: 50px;
   width: 100%;
-}
-
-.sym {
-  margin-bottom: 40px;
 }
 
 .row {
@@ -83,7 +149,6 @@ nav {
     .fa {
       font-size: .7em;
       color: #CCCCCC;
-      float: right;
 
       &:hover, &:active, &:visited {
         color: #21ce99;

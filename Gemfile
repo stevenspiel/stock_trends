@@ -15,6 +15,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'simple_oauth'
 gem 'em-http-request'
 gem 'oauth'
+gem 'omniauth-google-oauth2'
 gem 'yahoo-finance'
 gem 'savon'
 # using this branch because it returns the ids. It should be merged in soon and we can use master of the original gem

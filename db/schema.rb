@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150628020012) do
+ActiveRecord::Schema.define(version: 20150727115600) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -31,6 +31,16 @@ ActiveRecord::Schema.define(version: 20150628020012) do
 
   add_index "days", ["date"], name: "index_days_on_date", using: :btree
   add_index "days", ["sym_id"], name: "index_days_on_sym_id", using: :btree
+
+  create_table "favorite_syms", force: :cascade do |t|
+    t.integer  "user_id",    null: false
+    t.integer  "sym_id",     null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "favorite_syms", ["sym_id"], name: "index_favorite_syms_on_sym_id", using: :btree
+  add_index "favorite_syms", ["user_id"], name: "index_favorite_syms_on_user_id", using: :btree
 
   create_table "historical_data", force: :cascade do |t|
     t.integer  "sym_id",        null: false
@@ -69,7 +79,6 @@ ActiveRecord::Schema.define(version: 20150628020012) do
     t.boolean  "showing_patterns"
     t.boolean  "historical_data_logged"
     t.boolean  "intraday_log_error"
-    t.boolean  "favorite"
     t.boolean  "disabled"
     t.datetime "created_at",                                null: false
     t.datetime "updated_at",                                null: false
@@ -77,7 +86,6 @@ ActiveRecord::Schema.define(version: 20150628020012) do
 
   add_index "syms", ["current_price"], name: "index_syms_on_current_price", using: :btree
   add_index "syms", ["disabled"], name: "index_syms_on_disabled", using: :btree
-  add_index "syms", ["favorite"], name: "index_syms_on_favorite", using: :btree
   add_index "syms", ["full_name"], name: "index_syms_on_full_name", using: :btree
   add_index "syms", ["historical_api_id"], name: "index_syms_on_historical_api_id", using: :btree
   add_index "syms", ["intraday_api_id"], name: "index_syms_on_intraday_api_id", using: :btree
@@ -95,5 +103,19 @@ ActiveRecord::Schema.define(version: 20150628020012) do
 
   add_index "ticks", ["amount"], name: "index_ticks_on_amount", using: :btree
   add_index "ticks", ["time"], name: "index_ticks_on_time", using: :btree
+
+  create_table "users", force: :cascade do |t|
+    t.string   "provider"
+    t.string   "uid"
+    t.string   "first_name"
+    t.string   "last_name"
+    t.string   "email"
+    t.string   "image_link"
+    t.string   "oauth_token"
+    t.datetime "oauth_expires_at"
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
+    t.boolean  "admin",            default: false
+  end
 
 end

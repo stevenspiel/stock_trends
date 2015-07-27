@@ -13,10 +13,21 @@
 <nav>
   <h2 id="title">
     <%= link_to 'StockTrends', root_path %>
-    <span class="navigation">
-      <%= link_to fa_icon('star-o'), favorites_syms_path, title: 'Favorites' %>
-    </span>
   </h2>
+  <span class="navigation">
+    <% if current_user %>
+      <%= image_tag current_user.image_link, class: 'profile-picture', id: 'sign_in', data: { toggle: 'user-nav' } %>
+      <div id="user-nav">
+        <ul>
+          <li><%= link_to 'Favorites', favorites_syms_path, title: 'Favorites' %></li>
+          <li><%= link_to 'Sign out', signout_path, id: 'sign_out', title: 'Sign out' %></li>
+        </ul>
+      </div>
+    <% else %>
+      <%= link_to 'Log in', '/auth/google_oauth2' %>
+      <%= link_to 'Sign up', '/auth/google_oauth2' %>
+    <% end %>
+  </span>
 </nav>
 
 <div class="container">

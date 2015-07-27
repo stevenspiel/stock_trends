@@ -6,6 +6,7 @@ class Sym < ActiveRecord::Base
   has_many :days, -> { order(:date) }, dependent: :destroy
   has_many :ticks, through: :days
   has_many :historical_datums, -> { order(:date) }, dependent: :destroy
+  has_many :favorite_syms
 
   scope :pending_historical, -> { where(historical_data_logged: nil) }
   scope :unsuccessful_historical, -> { where.not(historical_data_logged: true) }
@@ -37,6 +38,10 @@ class Sym < ActiveRecord::Base
 
   def padded(string = ' ')
     name.ljust(7, string)
+  end
+
+  def favorited?(user)
+    favorite_syms.find_by(user: user).present?
   end
 
   def reset_cached_data(*keys)

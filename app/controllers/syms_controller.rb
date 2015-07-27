@@ -32,7 +32,19 @@ class SymsController < ApplicationController
 
   def toggle_favorite
     @sym = Sym.find(params[:id])
-    @sym.update_column(:favorite, !@sym.favorite)
+    favorite_sym = FavoriteSym.where(user: current_user, sym: @sym).first_or_initialize
+    if favorite_sym.new_record?
+      @favorited = favorite_sym.save!
+    else
+      favorite_sym.destroy
+      @favorited = false
+    end
+  end
+
+  def disable
+    sym = Sym.find(params[:id])
+    sym.update_attribute(:disabled, true)
+    render nothing: true
   end
 
   def index

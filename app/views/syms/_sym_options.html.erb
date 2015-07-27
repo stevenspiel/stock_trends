@@ -1,4 +1,6 @@
 <div class="option">
-  <%= link_to fa_icon('star-o'), toggle_favorite_sym_path(sym), method: :post, remote: true,
-    id: "favorite-#{sym.id}", class: "icon #{ 'active' if sym.favorite }", title: 'Mark as Favorite' %>
+  <% if current_user %>
+    <%= link_to fa_icon('star-o'), toggle_favorite_sym_path(sym), remote: true, id: "favorite-#{sym.id}",
+      class: "icon #{ 'active' if sym.favorited?(current_user) }", method: :post, title: 'Mark as Favorite' %>
+  <% end %>
 </div>
