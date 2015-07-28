@@ -31,6 +31,16 @@
 </nav>
 
 <div class="container">
+  <div data-function="notices">
+    <% flash.each do |name, msg| %>
+      <% if msg.is_a?(String) %>
+        <div role='alert' class='alert alert-<%= flash_class(name) %>'>
+          <%= content_tag :div, msg, :id => "flash_#{name}" %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+
   <%= yield %>
 </div>
 

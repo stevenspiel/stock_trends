@@ -18,6 +18,7 @@ gem 'oauth'
 gem 'omniauth-google-oauth2'
 gem 'yahoo-finance'
 gem 'savon'
+gem 'consul'
 # using this branch because it returns the ids. It should be merged in soon and we can use master of the original gem
 gem 'activerecord-import', git: 'git://github.com/zdennis/activerecord-import.git', branch: 'set_ids_in_bulk_import'
 gem 'chartkick'

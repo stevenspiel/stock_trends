@@ -42,6 +42,7 @@ class SymsController < ApplicationController
   end
 
   def disable
+    raise Consul::Powerless unless current_user.admin?
     sym = Sym.find(params[:id])
     sym.update_attribute(:disabled, true)
     render nothing: true
