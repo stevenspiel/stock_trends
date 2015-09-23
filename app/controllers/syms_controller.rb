@@ -2,6 +2,8 @@ class SymsController < ApplicationController
   include SymsHelper
   include ChartsHelper
 
+  respond_to :html, :js
+
   def autocomplete
     results = Market.by_importance.map do |market|
       children = market.syms.where('name ilike ?', "%#{params[:search_term]}%").order(:name).limit(10).map(&:as_json)
@@ -45,7 +47,9 @@ class SymsController < ApplicationController
     raise Consul::Powerless unless current_user.admin?
     sym = Sym.find(params[:id])
     sym.update_attribute(:disabled, true)
-    render nothing: true
+    respond_to do |format|
+      format.js { render json: { head: :ok } }
+    end
   end
 
   def index

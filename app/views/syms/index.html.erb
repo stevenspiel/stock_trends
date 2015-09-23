@@ -1,13 +1,13 @@
 <%= render 'search', q: @q %>
 
 <% @syms.each do |sym| %>
-  <div class="sym">
+  <div class="sym" data-sym-id="<%= sym.id %>">
 
     <div class="row title">
       <h2>
         <div class="col-md-4">
           <% if current_user.try(:admin) %>
-            <%= link_to(fa_icon('times-circle', class: 'warning left'), disable_sym_path(sym), remote: true, method: :post, data: { disable: :sym }) %>
+            <%= link_to(fa_icon('times-circle', class: 'warning left'), '#', data: { disable: :sym }) %>
           <% end %>
         </div>
         <div class="col-md-4">
