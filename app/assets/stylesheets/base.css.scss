@@ -1,0 +1,107 @@
+body {
+  font-family: 'Ropa Sans', sans-serif;
+  font-size: 18px;
+}
+
+a, a:active, a:visited, a:focus {
+  text-decoration: none;
+  color: #65c657;
+  -webkit-transition: color 0.2s;
+  -moz-transition: color 0.2s;
+  -ms-transition: color 0.2s;
+  -o-transition: color 0.2s;
+  transition: color 0.2s;
+}
+
+a:hover {
+  color: darken(#65c657, 18%);
+  text-decoration: none;
+}
+
+a.btn {
+  font-size: 1em;
+  border: 1px solid;
+  padding: 1em 3em;
+  min-width: 10em;
+}
+
+h1 {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 49px;
+}
+
+p {
+  font-family: 'Open Sans', sans-serif;
+}
+
+
+nav {
+  position: fixed;
+  height: 70px;
+  left: 0;
+  right: 0;
+  top: 0;
+  background: rgba(255, 255, 255, 0.83);
+  z-index: 1000;
+
+  .nav-container {
+    width: 80%;
+    margin: auto;
+    max-width: 1200px;
+
+    h2#title {
+      float: left;
+      font-size: 37.8px;
+      font-weight: bold;
+      line-height: 70px;
+      margin: 0 20px 0 20px;
+      text-align: left;
+
+      a:hover {
+        color: #65c657;
+      }
+    }
+
+    .navigation {
+      float: right;
+      margin: 0 20px 0 20px;
+      display: inline-block;
+
+      > a {
+        height: 70px;
+        line-height: 70px;
+        float: right;
+        margin: 0 1.7em;
+        text-transform: uppercase;
+      }
+
+      .profile-picture {
+        cursor: pointer;
+        width: 45px;
+        height: 45px;
+        margin-top: 12px;
+        -webkit-border-radius: 100%;
+        -moz-border-radius: 100%;
+        border-radius: 100%;
+        float: right;
+        margin-left: 2em;
+      }
+    }
+  }
+}
+
+#footer {
+  font-family: 'Open Sans', sans-serif;
+  background: #f1f1f1;
+  text-align: center;
+  padding: 4em;
+  font-size: 0.75em;
+
+  a {
+    color: #777;
+
+    &:hover {
+      color: #000;
+    }
+  }
+}

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>StockTrends</title>
+  <link href='http://fonts.googleapis.com/css?family=Ropa+Sans' rel='stylesheet' type='text/css'>
+  <%= stylesheet_link_tag    'public' %>
+  <%= javascript_include_tag 'public' %>
+  <%= analytics_init if Rails.env.production? %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+
+<nav>
+  <div class="nav-container">
+    <h2 id="title">
+      <%= link_to 'StockTrends', root_path %>
+    </h2>
+    <span class="navigation">
+      <%= link_to 'Sign In', '/auth/google_oauth2', title: 'Sign in' %>
+      <%= link_to 'Demo', '/auth/google_oauth2', title: 'Demo' %>
+    </span>
+  </div>
+</nav>
+
+<div class="container">
+  <%= yield %>
+</div>
+
+<div id="footer">
+  <p>
+  <div class="copyright">Copyright © <%= Date.today.year %> <%= link_to 'Steven Spiel', 'http://www.stevenspiel.com' %>. All Rights Reserved</div>
+  <div class="disclaimer"><%= link_to 'Disclaimer', disclaimer_path %></div>
+  </p>
+</div>
+
+</body>
+</html>

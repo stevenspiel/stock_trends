@@ -4,11 +4,19 @@ class ApplicationController < ActionController::Base
 
   include Consul::Controller
 
+  before_action :require_login
+
   current_power do
     Power.new(current_user)
   end
 
   rescue_from Consul::Powerless do |_exception|
-    flash[:error] = 'You do not have access to that area.' unless signed_in?
+    flash[:error] = 'You must be signed in.' unless signed_in?
+  end
+
+  private
+
+  def require_login
+    raise Consul::Powerless unless current_user
   end
 end

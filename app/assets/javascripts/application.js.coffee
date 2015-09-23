@@ -17,6 +17,7 @@
 #= require highcharts/highstock
 #= require moment
 #= require_tree .
+#= stub public
 
 $ ->
   $('.select2-autocomplete').each (i, e) ->

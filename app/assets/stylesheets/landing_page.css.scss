@@ -1,0 +1,51 @@
+.container {
+  margin-top: 75px;
+  width: 80%;
+  max-width: 1200px;
+}
+
+#landing-page-container {
+  text-align: center;
+
+  .headline {
+    padding: 2.5em 0 2em;
+    color: #555;
+  }
+}
+
+section.wide-screen {
+  display: table;
+  width: 100%;
+  margin: 2em 0;
+
+  .mockup {
+    display: table-cell;
+    width: 70%;
+
+    img {
+      width: 100%;
+    }
+  }
+
+  .cta-container {
+    display: table-cell;
+    width: 30%;
+
+    a.cta {
+      background-color: #65c657;
+      color: #fff;
+      float: right;
+      margin-right: 2em;
+      border-color: transparent;
+      -webkit-transition: background-color 0.2s;
+      -moz-transition: background-color 0.2s;
+      -ms-transition: background-color 0.2s;
+      -o-transition: background-color 0.2s;
+      transition: background-color 0.2s;
+
+      &:hover {
+        background-color: darken(#65c657, 10%);
+      }
+    }
+  }
+}

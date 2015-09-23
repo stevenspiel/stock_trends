@@ -11,23 +11,16 @@
 <body>
 
 <nav>
-  <h2 id="title">
-    <%= link_to 'StockTrends', root_path %>
-  </h2>
-  <span class="navigation">
-    <% if current_user %>
+  <div class="nav-container">
+    <h2 id="title">
+      <%= link_to 'StockTrends', root_path %>
+    </h2>
+    <span class="navigation">
       <%= image_tag current_user.image_link, class: 'profile-picture', id: 'sign_in', data: { toggle: 'user-nav' } %>
-      <div id="user-nav">
-        <ul>
-          <li><%= link_to 'Favorites', favorites_syms_path, title: 'Favorites' %></li>
-          <li><%= link_to 'Sign out', signout_path, id: 'sign_out', title: 'Sign out' %></li>
-        </ul>
-      </div>
-    <% else %>
-      <%= link_to 'Log in', '/auth/google_oauth2' %>
-      <%= link_to 'Sign up', '/auth/google_oauth2' %>
-    <% end %>
-  </span>
+      <%= link_to 'Log Out', signout_path, id: 'sign_out', title: 'Log out' %>
+      <%= link_to 'Favorites', favorites_syms_path, title: 'Favorites' %>
+    </span>
+  </div>
 </nav>
 
 <div class="container">
@@ -45,8 +38,10 @@
 </div>
 
 <div id="footer">
-  <div class="copyright">Copyright © <%= Date.today.year %> <%= link_to 'Steven Spiel', 'http://www.stevenspiel.com' %>. All Rights Reserved</div>
-  <div class="disclaimer"><%= link_to 'Disclaimer', disclaimer_path %></div>
+  <p>
+    <div class="copyright">Copyright © <%= Date.today.year %> <%= link_to 'Steven Spiel', 'http://www.stevenspiel.com' %>. All Rights Reserved</div>
+    <div class="disclaimer"><%= link_to 'Disclaimer', disclaimer_path %></div>
+  </p>
 </div>
 
 </body>

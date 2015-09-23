@@ -1,3 +1,36 @@
+.row {
+  &.charts {
+    margin: 20px 0;
+  }
+
+  &.title, h2 {
+    font-weight: bold;
+  }
+
+  &.title, &.subititle {
+    text-align: center;
+
+    .btn-group {
+      float: left;
+    }
+
+    .fa {
+      font-size: .7em;
+      color: #CCCCCC;
+
+      &:hover, &:active, &:visited {
+        color: #65c657;
+      }
+
+      &.warning {
+        &:hover, &:active, &:visited {
+          color: #fc522a;
+        }
+      }
+    }
+  }
+}
+
 .sym_search {
   padding: 3em 4em;
   background: #eee;
@@ -26,8 +59,8 @@
         &:hover, &:visited &:hover { i { color: #AAAAAA } }
 
         &.active {
-          color: #21ce99;
-          &:hover, &:visited, &:focus, &:active { i { color: #21ce99; }}
+          color: #65c657;
+          &:hover, &:visited, &:focus, &:active { i { color: #65c657; }}
         }
       }
     }
@@ -39,7 +72,6 @@
   border: none;
   text-align: center;
   padding: 2em 3em 3em;
-  font-size: 1.2em;
   cursor: default;
   a {
     padding: 0.2em 0.3em;
@@ -50,7 +82,7 @@
       color: #000;
 
       &:hover {
-        color: #21ce99;
+        color: #65c657;
       }
     }
   }

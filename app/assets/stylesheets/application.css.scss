@@ -12,162 +12,18 @@
  *
  *= require font-awesome
  *= require select2
+ *= require bootstrap_imports
  *= require_tree .
  *= require_self
+ *= stub landing_page
  */
 
-@import "bootstrap";
-@import "bootstrap-sprockets";
-
-body {
-  font-family: 'Ropa Sans', sans-serif;
-}
-
-a, a:hover, a:active, a:visited, a:focus {
-  text-decoration: none;
-  color: #21ce99;
-}
-
-nav {
-  position: fixed;
-  height: 55px;
-  left: 0;
-  right: 0;
-  top: 0;
-  background: rgba(255, 255, 255, 0.83);
-  z-index: 1000;
-
-  h2#title {
-    float: left;
-    font-size: 2.5em;
-    font-weight: bold;
-    line-height: 55px;
-    margin: 0 20px 0 20px;
-    text-align: left;
-  }
-
-  .navigation {
-    float: right;
-    margin: 0 20px 0 20px;
-    display: inline-block;
-    font-size: 18px;
-
-    > a {
-      height: 55px;
-      line-height: 55px;
-      float: right;
-      margin: 0 .9em;
-    }
-
-    .profile-picture {
-      cursor: pointer;
-      width: 45px;
-      height: 45px;
-      margin-top: 5px;
-      -webkit-border-radius: 100%;
-      -moz-border-radius: 100%;
-      border-radius: 100%;
-      float: right;
-      margin-left: 2em;
-    }
-
-    #user-nav {
-      display: none;
-      position: fixed;
-      top: 60px;
-      right: 15px;
-      z-index: 101;
-      background: #ffffff;
-      border: 1px solid rgba(0, 0, 0, 0.2);
-      border-radius: 4px;
-      margin-top: 1px;
-      padding: 8px 11px 0;
-      text-align: right;
-
-      &:before {
-        border-bottom: 7px solid rgba(0, 0, 0, 0.2);
-        border-left: 7px solid rgba(0, 0, 0, 0);
-        border-right: 7px solid rgba(0, 0, 0, 0);
-        content: "";
-        display: inline-block;
-        left: 96px;
-        position: absolute;
-        top: -7px;
-      }
-
-      &:after {
-        border-bottom: 6px solid #FFFFFF;
-        border-left: 6px solid rgba(0, 0, 0, 0);
-        border-right: 6px solid rgba(0, 0, 0, 0);
-        content: "";
-        display: inline-block;
-        left: 97px;
-        position: absolute;
-        top: -6px;
-      }
-
-      ul {
-        margin: 0;
-        display: inline-block;
-
-        li {
-          list-style: none;
-
-          a {
-            float: right;
-            line-height: 24px;
-          }
-        }
-      }
-    }
-  }
-}
-
 .container {
-  margin-top: 60px;
+  margin-top: 75px;
   width: 100%;
 }
 
-.row {
-  &.charts {
-    margin: 20px 0;
-  }
-
-  &.title, h2 {
-    font-weight: bold;
-  }
-
-  &.title, &.subititle {
-    text-align: center;
-
-    .btn-group {
-      float: left;
-    }
-
-    .fa {
-      font-size: .7em;
-      color: #CCCCCC;
-
-      &:hover, &:active, &:visited {
-        color: #21ce99;
-      }
-
-      &.warning {
-        &:hover, &:active, &:visited {
-          color: #fc522a;
-        }
-      }
-    }
-  }
-}
-
-.left {
-  float: left;
-}
-
-.right {
-  float: right;
-}
+// Select2 Overrides
 
 .select2-container {
   width: 100%;
@@ -176,7 +32,7 @@ nav {
     width: 100%;
     height: 34px;
     padding: 0;
-    font-size: 14px;
+    font-size: .8em;
     line-height: 1.428571429;
     color: #555555;
     background: #fff none;
@@ -201,16 +57,27 @@ nav {
   }
 }
 
-#footer {
-  background: #f1f1f1;
-  text-align: center;
-  padding: 4em;
+// Helpers
 
-  a {
-    color: #777;
 
-    &:hover {
-      color: #21ce99;
-    }
+.left {
+  float: left;
+}
+
+.right {
+  float: right;
+}
+
+// Media Queries
+
+@media (max-width: 1400px) {
+  .col-md-4 {
+    width: 50%;
+  }
+}
+
+@media (max-width: 700px) {
+  .col-md-4 {
+    width: 100%;
   }
 }

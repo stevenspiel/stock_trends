@@ -18,7 +18,7 @@ module ChartsHelper
             'stroke-width' => 0,
             r: 8,
             style: {
-              color: '#21ce99',
+              color: '#65c657',
               fontWeight: 'bold'
             },
             states: {
@@ -46,8 +46,11 @@ module ChartsHelper
           type: 'area',
           name: 'Price',
           data: data,
-          color: '#21ce99',
-          # fillColor: { linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 }, stops: [[0, '#21ce99'], [1, '#21ce99']] }
+          color: '#65c657',
+          # fillColor: { linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 }, stops: [[0, '#65c657'], [1, '#65c657']] }
+        })
+      f.chart({
+          topMargin: '0'
         })
       f.navigator(enabled: false)
     end
@@ -72,7 +75,7 @@ module ChartsHelper
         f.legend(align: 'right', verticalAlign: 'top', y: 75, x: 0, layout: 'vertical')
         f.tooltip(formatter: "function(){ return this.series.name + ' ' + (moment(this.x + 1000*3600*4)).format(' hh:mm') + '<br><b>$' + this.y + '</b>' }".js_code)
         # f.colors(n_days.times.map{|n| "rgba(0, 0, 0, #{ ( 1.to_f / (n + 1)**1.75 ).round(2)})" }.reverse)
-        f.colors(data_sets.size.times.map{|n| "rgba(69, 213, 161, #{ ( 1.to_f / (n + 1)**1.1 ).round(2)})" }.reverse[(data_sets.size * -1)..-1])
+        f.colors(data_sets.size.times.map{|n| "rgba(101, 198, 87, #{ ( 1.to_f / (n + 1)**1.1 ).round(2)})" }.reverse[(data_sets.size * -1)..-1])
         f.chart(height: 300)
         f.plotOptions({
             series: {
@@ -107,7 +110,7 @@ module ChartsHelper
       f.yAxis(labels: { formatter: "function(){ return '$' + this.value.toFixed(2) }".js_code}, title: { text: nil })
       f.legend(align: 'right', verticalAlign: 'top', y: 75, x: 0, layout: 'vertical')
       f.tooltip(formatter: "function(){ return this.series.name + ' ' + (moment(this.x + 1000*3600*4)).format(' hh:mm') + '<br><b>$' + this.y + '</b>' }".js_code)
-      f.colors(data_sets.size.times.map{|n| "rgba(69, 213, 161, #{ ( 1.to_f / (n + 1)**1.1 ).round(2)})" }.reverse)
+      f.colors(data_sets.size.times.map{|n| "rgba(101, 198, 87, #{ ( 1.to_f / (n + 1)**1.1 ).round(2)})" }.reverse)
       f.chart(height: 300)
       f.plotOptions({
           series: {

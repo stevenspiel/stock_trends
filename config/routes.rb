@@ -5,7 +5,7 @@ Rails.application.routes.draw do
 
   resources :sessions, only: [:create, :destroy]
 
-  root 'syms#index'
+  root 'landing_page#show'
 
   resources :syms do
     member do
