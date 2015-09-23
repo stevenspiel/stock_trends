@@ -4,8 +4,8 @@ module ChartsHelper
     LazyHighCharts::HighChart.new('spline') do |f|
       f.zoomType(:x)
       f.title({
-        text: historical_title(sym),
-        style: { color: '#000000' }
+        text: '',
+        style: { display: 'none' }
       })
       f.xAxis(type: 'datetime')
       f.tooltip(pointFormat: 'Price: ${point.y:.2f}')
