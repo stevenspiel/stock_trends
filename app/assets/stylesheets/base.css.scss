@@ -73,6 +73,10 @@ nav {
         float: right;
         margin: 0 1.7em;
         text-transform: uppercase;
+
+        &:first-child {
+          margin-right: 0;
+        }
       }
 
       .profile-picture {
