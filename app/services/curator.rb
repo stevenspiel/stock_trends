@@ -1,6 +1,8 @@
 class Curator
   def self.run!(market)
-    new(market).run
+    curator = new(market)
+    curator.run
+    curator.delete_old_ticks
   end
 
   def initialize(market)
@@ -28,6 +30,11 @@ class Curator
       end
     end
     @market.update_column(:last_day_curated, @today)
+  end
+
+  def delete_old_ticks
+    earliest_applicable_date = Date.today - 8.weeks
+    Day.where('date < ?', earliest_applicable_date).find_each(&:destroy)
   end
 
   private
