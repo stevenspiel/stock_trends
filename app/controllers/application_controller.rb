@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
 
   include Consul::Controller
 
+  before_action :redirect_to_maintenance, if: :maintenance_enabled
   before_action :require_login
 
   current_power do
@@ -18,5 +19,13 @@ class ApplicationController < ActionController::Base
 
   def require_login
     raise Consul::Powerless unless current_user
+  end
+
+  def redirect_to_maintenance
+    redirect_to :root
+  end
+
+  def maintenance_enabled
+    Maintenance.enabled?
   end
 end
