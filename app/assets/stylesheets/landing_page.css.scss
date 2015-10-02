@@ -8,7 +8,7 @@
   text-align: center;
 
   .headline {
-    padding: 2.5em 0 2em;
+    padding: 2.5em 0 3em;
     color: #555;
   }
 }
@@ -16,7 +16,8 @@
 section.wide-screen {
   display: table;
   width: 100%;
-  margin: 2em 0;
+  margin: 1em 0 2em;
+  padding: 1em 0 4em;
 
   .mockup {
     display: table-cell;
@@ -34,8 +35,6 @@ section.wide-screen {
     a.cta {
       background-color: #65c657;
       color: #fff;
-      float: right;
-      margin-right: 2em;
       border-color: transparent;
       -webkit-transition: background-color 0.2s;
       -moz-transition: background-color 0.2s;
